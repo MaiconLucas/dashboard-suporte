@@ -7,43 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0a0a0b;
-  --bg2: #111113;
-  --bg3: #18181b;
-  --bg4: #222226;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #e8e8ea;
-  --text2: #8b8b96;
-  --text3: #55555e;
-  --green: #22c55e;
-  --green-dim: #16a34a33;
-  --red: #ef4444;
-  --red-dim: #dc262633;
-  --amber: #f59e0b;
-  --amber-dim: #d9770633;
-  --blue: #3b82f6;
-  --blue-dim: #1d4ed833;
-  --accent: #6366f1;
-  --accent-dim: #4338ca22;
-  --mono: 'DM Mono', monospace;
-  --sans: 'DM Sans', sans-serif;
-}
+:root{--bg:#0a0a0b;--bg2:#111113;--bg3:#18181b;--bg4:#222226;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#e8e8ea;--text2:#8b8b96;--text3:#55555e;--green:#22c55e;--green-dim:#16a34a33;--red:#ef4444;--red-dim:#dc262633;--amber:#f59e0b;--amber-dim:#d9770633;--blue:#3b82f6;--blue-dim:#1d4ed833;--accent:#6366f1;--accent-dim:#4338ca22;--mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh;overflow-x:hidden;}
-
-/* SCANLINE OVERLAY */
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:9999;}
-
-/* TOPBAR */
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:48px;position:sticky;top:0;z-index:100;gap:16px;}
 .topbar-brand{display:flex;align-items:center;gap:10px;}
 .brand-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);}
 .brand-name{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text);letter-spacing:.08em;text-transform:uppercase;}
 .brand-version{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:4px;}
-.topbar-center{display:flex;align-items:center;gap:6px;}
 .topbar-right{display:flex;align-items:center;gap:8px;}
 .status-pill{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--text3);}
@@ -53,13 +25,11 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .status-txt{font-family:var(--mono);font-size:11px;color:var(--text2);}
 .update-time{font-family:var(--mono);font-size:11px;color:var(--text3);}
-.btn{font-family:var(--sans);padding:5px 12px;font-size:12px;font-weight:500;border:1px solid var(--border2);border-radius:6px;background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;letter-spacing:.01em;}
-.btn:hover{background:var(--bg4);color:var(--text);border-color:rgba(255,255,255,.2);}
+.btn{font-family:var(--sans);padding:5px 12px;font-size:12px;font-weight:500;border:1px solid var(--border2);border-radius:6px;background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;}
+.btn:hover{background:var(--bg4);color:var(--text);}
 .btn-accent{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
 .btn-accent:hover{background:rgba(99,102,241,.2);color:#818cf8;}
 .sel{font-family:var(--mono);padding:4px 8px;font-size:11px;border:1px solid var(--border);border-radius:6px;background:var(--bg3);color:var(--text2);cursor:pointer;}
-
-/* FILTER BAR */
 .filter-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:.6rem 1.5rem;display:none;gap:12px;align-items:center;flex-wrap:wrap;}
 .filter-bar.visible{display:flex;}
 .filter-label{font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;}
@@ -70,9 +40,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .filter-input:focus{border-color:var(--accent);}
 .fdivider{width:1px;height:20px;background:var(--border);}
 .btn-clear{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text3);cursor:pointer;}
-.btn-clear:hover{color:var(--text2);border-color:var(--border2);}
-
-/* SETUP OVERLAY */
+.btn-clear:hover{color:var(--text2);}
 #setup{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:500;}
 #setup.hidden{display:none;}
 .setup-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:2.5rem;width:440px;max-width:95vw;}
@@ -85,63 +53,42 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .setup-field input{width:100%;padding:10px 12px;font-family:var(--mono);font-size:13px;border:1px solid var(--border2);border-radius:8px;background:var(--bg3);color:var(--text);outline:none;transition:border-color .15s;}
 .setup-field input:focus{border-color:var(--accent);}
 .setup-hint{font-size:11px;color:var(--text3);margin-top:.4rem;}
-.btn-setup{width:100%;margin-top:1.5rem;padding:11px;font-size:14px;font-weight:600;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;transition:background .15s;letter-spacing:.02em;}
+.btn-setup{width:100%;margin-top:1.5rem;padding:11px;font-size:14px;font-weight:600;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;transition:background .15s;}
 .btn-setup:hover{background:#4f46e5;}
 .setup-error{font-size:12px;color:var(--red);margin-top:.75rem;display:none;}
 .setup-error.show{display:block;}
-
-/* MAIN */
 .main{padding:1.25rem 1.5rem;max-width:1800px;margin:0 auto;}
-
-/* CHIPS */
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem;}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--accent-dim);border:1px solid rgba(99,102,241,.3);color:#818cf8;font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;font-family:var(--mono);}
 .chip button{background:none;border:none;color:#818cf8;cursor:pointer;font-size:13px;line-height:1;padding:0;opacity:.7;}
 .chip button:hover{opacity:1;}
-
-/* SECTION LABEL */
 .sec{font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;margin-top:1.75rem;display:flex;align-items:center;gap:8px;}
 .sec::after{content:'';flex:1;height:1px;background:var(--border);}
 .sec:first-child{margin-top:0;}
 .sec-count{font-size:10px;color:var(--accent);background:var(--accent-dim);padding:1px 7px;border-radius:20px;}
 .sec-count.red{color:var(--red);background:var(--red-dim);}
-
-/* METRICS */
 .metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;}
-.metric{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;position:relative;overflow:hidden;transition:border-color .2s;}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;transition:border-color .2s;}
 .metric:hover{border-color:var(--border2);}
 .metric-label{font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
 .metric-value{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--text);line-height:1;}
-.metric-value.red{color:var(--red);}
-.metric-value.green{color:var(--green);}
-.metric-value.amber{color:var(--amber);}
-.metric-value.sm{font-size:18px;}
+.metric-value.red{color:var(--red);}.metric-value.green{color:var(--green);}.metric-value.amber{color:var(--amber);}.metric-value.sm{font-size:18px;}
 .metric-sub{font-size:11px;color:var(--text3);margin-top:.3rem;}
-.metric-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--accent);width:0%;transition:width .5s ease;}
-
-/* QUEUES */
 .queues-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
 .queue-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
 .queue-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border);transition:background .2s;}
 .queue-card:hover{border-color:var(--border2);transform:translateY(-1px);}
 .queue-card:hover::before{background:var(--accent);}
-.queue-card.active::before{background:var(--accent);}
-.queue-card.active{border-color:rgba(99,102,241,.3);}
 .queue-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:.6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .queue-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
 .qs-label{font-family:var(--mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
 .qs-val{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text);}
-.qs-val.red{color:var(--red);}
-.qs-val.amber{color:var(--amber);}
-.qs-val.green{color:var(--green);}
-.conn-dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px;}
+.qs-val.red{color:var(--red);}.qs-val.amber{color:var(--amber);}.qs-val.green{color:var(--green);}
 .conn-ok .conn-dot{background:var(--green);box-shadow:0 0 4px var(--green);}
 .conn-off .conn-dot{background:var(--red);}
+.conn-dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px;}
 .conn-label{font-family:var(--mono);font-size:10px;}
-.conn-ok .conn-label{color:var(--green);}
-.conn-off .conn-label{color:var(--red);}
-
-/* AGENTS */
+.conn-ok .conn-label{color:var(--green);}.conn-off .conn-label{color:var(--red);}
 .agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
 .agent-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;transition:border-color .2s;}
 .agent-card:hover{border-color:var(--border2);}
@@ -152,50 +99,50 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .agent-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
 .as-label{font-family:var(--mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
 .as-val{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);}
-.as-val.red{color:var(--red);}
-.as-val.amber{color:var(--amber);}
-.as-val.green{color:var(--green);}
-
-/* TABLE */
+.as-val.red{color:var(--red);}.as-val.amber{color:var(--amber);}.as-val.green{color:var(--green);}
 .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:.5rem;}
 table{width:100%;border-collapse:collapse;}
 thead th{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);text-align:left;padding:8px 12px;background:var(--bg3);border-bottom:1px solid var(--border);white-space:nowrap;text-transform:uppercase;letter-spacing:.06em;}
 tbody td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text);font-size:12px;}
 tbody tr:last-child td{border-bottom:none;}
 tbody tr:hover td{background:var(--bg3);}
+/* Linha piscando para atendimentos críticos */
+tbody tr.row-critical{animation:rowblink 2s infinite;}
+@keyframes rowblink{0%,100%{background:transparent}50%{background:rgba(239,68,68,.05)}}
 .badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;font-weight:500;}
 .badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.2);}
 .badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
 .badge-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.2);}
 .badge-gray{background:var(--bg4);color:var(--text3);border:1px solid var(--border);}
 .badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(59,130,246,.2);}
+/* Badge especial para aguardando resposta */
+.badge-pending{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3);animation:pendingpulse 2s infinite;}
+@keyframes pendingpulse{0%,100%{opacity:1}50%{opacity:.6}}
 .queue-tag{font-family:var(--mono);font-size:10px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:1px 6px;border-radius:4px;white-space:nowrap;}
 .empty-row td{text-align:center;padding:2.5rem;color:var(--text3);font-family:var(--mono);font-size:11px;}
 .wait-critical{color:var(--red);font-weight:500;}
 .wait-urgent{color:var(--amber);font-weight:500;}
 .mono{font-family:var(--mono);}
-
-/* LOADING */
 #splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:400;}
 #splash.hidden{display:none;}
 .splash-logo{font-family:var(--mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.15em;}
 .splash-ring{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .splash-msg{font-family:var(--mono);font-size:11px;color:var(--text3);}
-
-/* ALERTS */
 .alert{background:var(--amber-dim);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:.6rem 1rem;font-size:12px;color:var(--amber);margin-bottom:1rem;display:none;}
 .alert.show{display:block;}
+/* Legend */
+.legend{display:flex;gap:16px;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--text3);}
+.legend-dot{width:6px;height:6px;border-radius:50%;}
 </style>
 </head>
 <body>
-
 <div id="splash">
   <div class="splash-logo">Único · Ops Center</div>
   <div class="splash-ring"></div>
   <div class="splash-msg" id="splash-msg">inicializando...</div>
 </div>
-
 <div id="setup" class="hidden">
   <div class="setup-box">
     <div class="setup-logo"><div class="setup-logo-dot"></div>Único Ops Center</div>
@@ -209,22 +156,19 @@ tbody tr:hover td{background:var(--bg3);}
     <div class="setup-field">
       <label>apiKey global</label>
       <input type="password" id="inp-key" placeholder="••••••••••••••••••••••••••••••"/>
-      <div class="setup-hint">Encontrada em Configurações → Geral. Salva com segurança no seu navegador.</div>
+      <div class="setup-hint">Em Configurações → Geral. Salva com segurança no seu navegador.</div>
     </div>
     <button class="btn-setup" onclick="connect()">Conectar →</button>
     <div class="setup-error" id="setup-error"></div>
   </div>
 </div>
-
 <div class="topbar">
   <div class="topbar-brand">
     <div class="brand-dot"></div>
     <span class="brand-name">Único Ops</span>
-    <span class="brand-version">v2.0</span>
+    <span class="brand-version">v2.1</span>
   </div>
-  <div class="topbar-center">
-    <span class="update-time" id="last-update"></span>
-  </div>
+  <span class="update-time" id="last-update"></span>
   <div class="topbar-right">
     <select class="sel" id="interval-sel" onchange="changeInterval()">
       <option value="60">1 min</option>
@@ -236,99 +180,106 @@ tbody tr:hover td{background:var(--bg3);}
       <span class="status-txt" id="status-txt">—</span>
     </div>
     <button class="btn btn-accent" onclick="fetchAll()">↺ Sync</button>
-    <button class="btn" onclick="resetSetup()">⚙</button>
+    <button class="btn" onclick="resetSetup()" title="Reconfigurar">⚙</button>
   </div>
 </div>
-
 <div class="filter-bar" id="filter-bar">
   <span class="filter-label">Fila</span>
-  <select class="filter-sel" id="filter-queue" onchange="applyFilters()">
-    <option value="">Todas as filas</option>
-  </select>
+  <select class="filter-sel" id="filter-queue" onchange="applyFilters()"><option value="">Todas as filas</option></select>
   <div class="fdivider"></div>
   <span class="filter-label">Agente</span>
-  <select class="filter-sel" id="filter-agent" onchange="applyFilters()">
-    <option value="">Todos os agentes</option>
-  </select>
+  <select class="filter-sel" id="filter-agent" onchange="applyFilters()"><option value="">Todos os agentes</option></select>
   <div class="fdivider"></div>
   <input class="filter-input" type="text" id="filter-client" placeholder="Buscar cliente, número ou protocolo..." oninput="applyFilters()"/>
   <button class="btn-clear" onclick="clearFilters()">✕ Limpar</button>
 </div>
-
 <div class="main" id="main" style="display:none">
   <div class="alert" id="alert-bar"></div>
   <div class="chips" id="chips"></div>
-
   <div class="sec">Visão geral</div>
   <div class="metrics-grid">
     <div class="metric"><div class="metric-label">Abertos</div><div class="metric-value" id="m-open">—</div><div class="metric-sub" id="m-queue-sub">—</div></div>
-    <div class="metric"><div class="metric-label">Sem resposta</div><div class="metric-value red" id="m-unans">—</div><div class="metric-sub">aguardando agente</div></div>
-    <div class="metric"><div class="metric-label">Respondidos hoje</div><div class="metric-value green" id="m-resp">—</div><div class="metric-sub">seleção atual</div></div>
+    <div class="metric"><div class="metric-label">Aguard. resposta</div><div class="metric-value red" id="m-unans">—</div><div class="metric-sub">cliente sem retorno</div></div>
+    <div class="metric"><div class="metric-label">Agente respondeu</div><div class="metric-value green" id="m-answered">—</div><div class="metric-sub">aguardando cliente</div></div>
+    <div class="metric"><div class="metric-label">Respondidos hoje</div><div class="metric-value" id="m-resp">—</div><div class="metric-sub">encerrados com resp.</div></div>
     <div class="metric"><div class="metric-label">Agentes online</div><div class="metric-value" id="m-agents">—</div><div class="metric-sub">logados agora</div></div>
     <div class="metric"><div class="metric-label">TMA</div><div class="metric-value sm" id="m-tma">—</div><div class="metric-sub">tempo médio atend.</div></div>
     <div class="metric"><div class="metric-label">TMPR</div><div class="metric-value sm" id="m-tmpr">—</div><div class="metric-sub">tempo 1ª resposta</div></div>
     <div class="metric"><div class="metric-label">NPS</div><div class="metric-value" id="m-nps">—</div><div class="metric-sub" id="m-nps-sub">— pesquisas</div></div>
   </div>
-
   <div id="agents-section" style="display:none">
-    <div class="sec" id="lbl-agents">Agentes<span class="sec-count" id="agents-count">0</span></div>
+    <div class="sec">Agentes <span class="sec-count" id="agents-count">0</span></div>
     <div class="agents-grid" id="agents-grid"></div>
   </div>
-
   <div id="queues-section">
     <div class="sec">Filas</div>
     <div class="queues-grid" id="queues-grid"></div>
   </div>
-
-  <div class="sec">Sem resposta <span class="sec-count red" id="unans-count">0</span></div>
+  <div class="sec">Aguardando resposta do agente <span class="sec-count red" id="unans-count">0</span></div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Crítico &gt;60min</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Urgente &gt;30min</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Normal</div>
+    <div class="legend-item" style="color:var(--text3);font-size:10px">↺ atualiza a cada ciclo automaticamente</div>
+  </div>
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th style="width:20%">Cliente</th>
-        <th style="width:15%">Fila</th>
-        <th style="width:11%">Aguardando</th>
-        <th style="width:13%">Agente</th>
-        <th style="width:10%">Urgência</th>
-        <th style="width:10%">Aberto há</th>
-        <th style="width:21%">Protocolo</th>
+        <th style="width:20%">Cliente</th><th style="width:14%">Fila</th>
+        <th style="width:11%">Aguardando</th><th style="width:13%">Agente</th>
+        <th style="width:10%">Status</th><th style="width:10%">Aberto há</th><th style="width:22%">Protocolo</th>
       </tr></thead>
       <tbody id="unans-body"></tbody>
     </table>
   </div>
-
   <div class="sec">Todos os atendimentos <span class="sec-count" id="all-count">0</span></div>
   <div class="table-wrap" style="margin-bottom:2rem">
     <table>
       <thead><tr>
-        <th style="width:17%">Cliente</th>
-        <th style="width:14%">Fila</th>
-        <th style="width:10%">Aberto há</th>
-        <th style="width:12%">Última rcv</th>
-        <th style="width:12%">Última env.</th>
-        <th style="width:14%">Agente</th>
-        <th style="width:9%">Status</th>
-        <th style="width:12%">Protocolo</th>
+        <th style="width:16%">Cliente</th><th style="width:13%">Fila</th>
+        <th style="width:10%">Aberto há</th><th style="width:11%">Últ. rcv</th>
+        <th style="width:11%">Últ. env.</th><th style="width:13%">Agente</th>
+        <th style="width:14%">Situação</th><th style="width:12%">Protocolo</th>
       </tr></thead>
       <tbody id="all-body"></tbody>
     </table>
   </div>
 </div>
-
 <script>
-const SK='uc_key', SU='uc_url';
-let BASE='', GKEY='', timer=null, intervalSecs=120, connected=false;
-let allQueues=[], allChats=[], agentMap={};
-let fQ='', fA='', fC='';
+const SK='uc_key',SU='uc_url';
+let BASE='',GKEY='',timer=null,intervalSecs=120,connected=false;
+let allQueues=[],allChats=[],agentMap={};
+let fQ='',fA='',fC='';
 
 function fmt(s){if(!s||s===0)return'—';s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;if(h>0)return h+'h'+m+'m';if(m>0)return m+'m'+sec+'s';return sec+'s';}
 function el(ts){return(!ts||ts===0)?0:Math.floor(Date.now()/1000)-ts;}
 function fEl(ts){const s=el(ts);return s>0?fmt(s):'—';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* LÓGICA CENTRAL DE PENDÊNCIA
+   Detecta se cliente está aguardando resposta do agente em qualquer momento do ciclo */
+function isPending(c){
+  if(c.onQueue)return true;                                          // na fila sem agente
+  if(!c.userResponded)return true;                                   // agente nunca respondeu
+  if(c.lastRcvMsgTime&&!c.lastSendMsgTime)return true;              // cliente mandou, agente nunca enviou
+  if(c.lastRcvMsgTime&&c.lastSendMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime)return true; // cliente respondeu depois
+  return false;
+}
+
+/* Situação descritiva do atendimento */
+function getSituation(c){
+  if(c.onQueue)return'<span class="badge badge-blue">● na fila</span>';
+  if(!c.userResponded)return'<span class="badge badge-pending">⏳ aguard. 1ª resp.</span>';
+  if(c.lastRcvMsgTime&&!c.lastSendMsgTime)return'<span class="badge badge-pending">⏳ aguard. resposta</span>';
+  if(c.lastRcvMsgTime&&c.lastSendMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime)return'<span class="badge badge-pending">⏳ cliente respondeu</span>';
+  return'<span class="badge badge-green">✓ agente respondeu</span>';
+}
+
 function urgB(s){
-  if(s>3600)return'<span class="badge badge-red">● Crítico</span>';
-  if(s>1800)return'<span class="badge badge-amber">● Urgente</span>';
-  if(s>600)return'<span class="badge badge-amber">○ Atenção</span>';
-  return'<span class="badge badge-green">○ Normal</span>';
+  if(s>3600)return'<span class="badge badge-red">● crítico</span>';
+  if(s>1800)return'<span class="badge badge-amber">● urgente</span>';
+  if(s>600)return'<span class="badge badge-amber">○ atenção</span>';
+  return'<span class="badge badge-green">○ normal</span>';
 }
 function wCls(s){return s>3600?'wait-critical':s>1800?'wait-urgent':'';}
 function nCls(n){return n>=8?'green':n>=6?'amber':'red';}
@@ -341,8 +292,7 @@ async function connect(){
   BASE=document.getElementById('inp-url').value.trim().replace(/\/$/,'');
   GKEY=document.getElementById('inp-key').value.trim();
   if(!GKEY){showErr('Informe a apiKey global.');return;}
-  const errEl=document.getElementById('setup-error');
-  errEl.className='setup-error';
+  document.getElementById('setup-error').className='setup-error';
   document.querySelector('.btn-setup').textContent='Conectando...';
   try{
     await post('/int/getAllQueues',{apiKey:GKEY});
@@ -352,10 +302,7 @@ async function connect(){
     document.getElementById('main').style.display='block';
     document.getElementById('filter-bar').classList.add('visible');
     await fetchAll();startTimer();
-  }catch(e){
-    showErr('Erro ao conectar: '+e.message);
-    document.querySelector('.btn-setup').textContent='Conectar →';
-  }
+  }catch(e){showErr('Erro: '+e.message);document.querySelector('.btn-setup').textContent='Conectar →';}
 }
 function showErr(msg){const e=document.getElementById('setup-error');e.textContent=msg;e.className='setup-error show';}
 function resetSetup(){connected=false;if(timer)clearInterval(timer);document.getElementById('main').style.display='none';document.getElementById('filter-bar').classList.remove('visible');document.getElementById('setup').classList.remove('hidden');setSt('','—');}
@@ -374,11 +321,10 @@ async function fetchAll(){
     }));
     const uids=[...new Set(allChats.filter(c=>c.userId).map(c=>c.userId))];
     await Promise.all(uids.filter(u=>!agentMap[u]).map(async u=>{
-      try{const chat=allChats.find(c=>c.userId===u);if(!chat)return;const d=await post('/int/getUserDetail',{queueId:chat._qId,apiKey:GKEY,userId:u});agentMap[u]={id:u,name:d.fullName||d.username||'Agente '+u,chatsToday:d.chatsToday,respToday:d.chatsRespondedToday,nps:d.todaysSurveyGrade,surveys:d.todaysRespondedSurveys,tma:d.todaysAvgContactTime,paused:d.paused,available:d.available,count:d.chatsCount};}catch(e){agentMap[u]={id:u,name:'Agente '+u};}
+      try{const chat=allChats.find(c=>c.userId===u);if(!chat)return;const d=await post('/int/getUserDetail',{queueId:chat._qId,apiKey:GKEY,userId:u});agentMap[u]={id:u,name:d.fullName||d.username||'Agente '+u,chatsToday:d.chatsToday,respToday:d.chatsRespondedToday,nps:d.todaysSurveyGrade,surveys:d.todaysRespondedSurveys,tma:d.todaysAvgContactTime,paused:d.paused,available:d.available};}catch(e){agentMap[u]={id:u,name:'Agente '+u};}
     }));
     populateSelects();applyFilters();
-    const now=new Date();
-    document.getElementById('last-update').textContent='sync '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.getElementById('last-update').textContent='sync '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     setSt('ok','live');
     document.getElementById('splash').classList.add('hidden');
   }catch(e){setSt('error','error');showAlert('Erro: '+e.message);}
@@ -405,7 +351,6 @@ function applyFilters(){
   });
   renderChips();renderMetrics(f);renderAgents(f);renderQueues(f);renderUnans(f);renderAll(f);
 }
-
 function clearFilters(){document.getElementById('filter-queue').value='';document.getElementById('filter-agent').value='';document.getElementById('filter-client').value='';applyFilters();}
 
 function renderChips(){
@@ -417,8 +362,9 @@ function renderChips(){
 }
 
 function renderMetrics(f){
+  const pending=f.filter(isPending);
+  const answered=f.filter(c=>!isPending(c));
   const onQ=f.filter(c=>c.onQueue).length;
-  const un=f.filter(c=>c.onQueue||!c.responded||!c.userResponded).length;
   let qCalc=fQ?allQueues.filter(q=>String(q.id)===fQ):allQueues;
   let tR=0,tA=0,tmaS=0,tmaC=0,tmS=0,tmC=0,nS=0,nT=0;
   qCalc.forEach(q=>{tR+=q.todaysRespondedChats||0;tA+=q.loggedAgentsCount||0;if(q.todaysAvgContactTime>0){tmaS+=q.todaysAvgContactTime;tmaC++;}if(q.todaysAvgFirstAnswerTime>0){tmS+=q.todaysAvgFirstAnswerTime;tmC++;}if(q.todaysRespondedSurveys>0){nS+=q.todaysSurveyGrade*q.todaysRespondedSurveys;nT+=q.todaysRespondedSurveys;}});
@@ -426,7 +372,8 @@ function renderMetrics(f){
   const np=nT>0?(nS/nT).toFixed(1):null;
   document.getElementById('m-open').textContent=f.length;
   document.getElementById('m-queue-sub').textContent=onQ+' na fila';
-  document.getElementById('m-unans').textContent=un;
+  document.getElementById('m-unans').textContent=pending.length;
+  document.getElementById('m-answered').textContent=answered.length;
   document.getElementById('m-resp').textContent=tR;
   document.getElementById('m-agents').textContent=tA;
   document.getElementById('m-tma').textContent=tmaC>0?fmt(Math.round(tmaS/tmaC)):'—';
@@ -441,14 +388,15 @@ function renderAgents(f){
   sec.style.display='block';
   const ids=[...new Set(f.filter(c=>c.userId).map(c=>c.userId))];
   document.getElementById('agents-count').textContent=ids.length;
-  const el=document.getElementById('agents-grid');
-  if(!ids.length){el.innerHTML='<p style="color:var(--text3);font-family:var(--mono);font-size:11px">Nenhum agente com atendimentos nessa seleção.</p>';return;}
-  el.innerHTML=ids.map(u=>{
+  const e=document.getElementById('agents-grid');
+  if(!ids.length){e.innerHTML='<p style="color:var(--text3);font-family:var(--mono);font-size:11px">Nenhum agente com atendimentos nessa seleção.</p>';return;}
+  e.innerHTML=ids.map(u=>{
     const a=agentMap[u]||{id:u,name:'Agente '+u};
     const ca=f.filter(c=>c.userId===u).length;
+    const pend=f.filter(c=>c.userId===u&&isPending(c)).length;
     const stC=a.paused?'var(--amber)':a.available?'var(--green)':'var(--red)';
     const stL=a.paused?'pausa':a.available?'disponível':'indisponível';
-    return'<div class="agent-card"><div class="agent-header"><div class="agent-avatar">'+esc(ini(a.name))+'</div><div style="overflow:hidden"><div class="agent-name">'+esc(a.name)+'</div><div class="agent-status" style="color:'+stC+'">● '+stL+'</div></div></div><div class="agent-stats"><div><div class="as-label">Ativos</div><div class="as-val '+(ca>8?'red':ca>5?'amber':'')+'">'+ca+'</div></div><div><div class="as-label">Hoje</div><div class="as-val">'+(a.chatsToday||'—')+'</div></div><div><div class="as-label">Resp.</div><div class="as-val">'+(a.respToday||'—')+'</div></div><div><div class="as-label">TMA</div><div class="as-val" style="font-size:11px">'+fmt(a.tma)+'</div></div><div><div class="as-label">NPS</div><div class="as-val '+(a.surveys>0?nCls(a.nps):'')+'">'+( a.surveys>0?(a.nps||0).toFixed(1):'—')+'</div></div><div><div class="as-label">Pesq.</div><div class="as-val">'+(a.surveys||0)+'</div></div></div></div>';
+    return'<div class="agent-card"><div class="agent-header"><div class="agent-avatar">'+esc(ini(a.name))+'</div><div style="overflow:hidden"><div class="agent-name">'+esc(a.name)+'</div><div class="agent-status" style="color:'+stC+'">● '+stL+'</div></div></div><div class="agent-stats"><div><div class="as-label">Ativos</div><div class="as-val '+(ca>8?'red':ca>5?'amber':'')+'">'+ca+'</div></div><div><div class="as-label">Pendentes</div><div class="as-val '+(pend>0?'amber':'green')+'">'+pend+'</div></div><div><div class="as-label">Hoje</div><div class="as-val">'+(a.chatsToday||'—')+'</div></div><div><div class="as-label">TMA</div><div class="as-val" style="font-size:11px">'+fmt(a.tma)+'</div></div><div><div class="as-label">NPS</div><div class="as-val '+(a.surveys>0?nCls(a.nps):'')+'">'+( a.surveys>0?(a.nps||0).toFixed(1):'—')+'</div></div><div><div class="as-label">Pesq.</div><div class="as-val">'+(a.surveys||0)+'</div></div></div></div>';
   }).join('');
 }
 
@@ -456,28 +404,29 @@ function renderQueues(f){
   const sec=document.getElementById('queues-section');
   if(fQ||fA){sec.style.display='none';return;}
   sec.style.display='block';
-  const el=document.getElementById('queues-grid');
+  const e=document.getElementById('queues-grid');
   const list=allQueues.filter(q=>q.enabled);
-  if(!list.length){el.innerHTML='';return;}
-  el.innerHTML=list.map(q=>{
+  if(!list.length){e.innerHTML='';return;}
+  e.innerHTML=list.map(q=>{
     const conn=q.connected&&q.authenticated;
     const nps=q.todaysRespondedSurveys>0?parseFloat(q.todaysSurveyGrade).toFixed(1):'—';
     const npsC=q.todaysRespondedSurveys>0?nCls(parseFloat(q.todaysSurveyGrade)):'';
-    return'<div class="queue-card" onclick="document.getElementById(\'filter-queue\').value=\''+q.id+'\';applyFilters()" title="Filtrar por esta fila"><div class="queue-name">'+esc(q.name)+'</div><div class="queue-stats"><div><div class="qs-label">Abertos</div><div class="qs-val '+(q.openChats>10?'red':q.openChats>5?'amber':'')+'">'+( q.openChats||0)+'</div></div><div><div class="qs-label">Fila</div><div class="qs-val '+(q.chatsOnQueue>3?'red':q.chatsOnQueue>0?'amber':'')+'">'+( q.chatsOnQueue||0)+'</div></div><div><div class="qs-label">Agentes</div><div class="qs-val">'+(q.loggedAgentsCount||0)+'</div></div><div><div class="qs-label">NPS</div><div class="qs-val '+npsC+'">'+nps+'</div></div><div><div class="qs-label">TMA</div><div class="qs-val" style="font-size:11px">'+fmt(q.todaysAvgContactTime)+'</div></div><div><div class="qs-label" style="grid-column:span 1">Status</div><div class="'+(conn?'conn-ok':'conn-off')+'"><span class="conn-dot"></span><span class="conn-label">'+(conn?'online':'offline')+'</span></div></div></div></div>';
+    return'<div class="queue-card" onclick="document.getElementById(\'filter-queue\').value=\''+q.id+'\';applyFilters()" title="Filtrar por esta fila"><div class="queue-name">'+esc(q.name)+'</div><div class="queue-stats"><div><div class="qs-label">Abertos</div><div class="qs-val '+(q.openChats>10?'red':q.openChats>5?'amber':'')+'">'+( q.openChats||0)+'</div></div><div><div class="qs-label">Fila</div><div class="qs-val '+(q.chatsOnQueue>3?'red':q.chatsOnQueue>0?'amber':'')+'">'+( q.chatsOnQueue||0)+'</div></div><div><div class="qs-label">Agentes</div><div class="qs-val">'+(q.loggedAgentsCount||0)+'</div></div><div><div class="qs-label">NPS</div><div class="qs-val '+npsC+'">'+nps+'</div></div><div><div class="qs-label">TMA</div><div class="qs-val" style="font-size:11px">'+fmt(q.todaysAvgContactTime)+'</div></div><div><div class="qs-label">Status</div><div class="'+(conn?'conn-ok':'conn-off')+'"><span class="conn-dot"></span><span class="conn-label">'+(conn?'online':'offline')+'</span></div></div></div></div>';
   }).join('');
 }
 
 function renderUnans(f){
-  const un=f.filter(c=>c.onQueue||!c.responded||!c.userResponded);
-  un.sort((a,b)=>el(b.lastRcvMsgTime||b.beginTime)-el(a.lastRcvMsgTime||a.beginTime));
-  document.getElementById('unans-count').textContent=un.length;
+  const pending=f.filter(isPending);
+  pending.sort((a,b)=>el(b.lastRcvMsgTime||b.beginTime)-el(a.lastRcvMsgTime||a.beginTime));
+  document.getElementById('unans-count').textContent=pending.length;
   const e=document.getElementById('unans-body');
-  if(!un.length){e.innerHTML='<tr class="empty-row"><td colspan="7">nenhum atendimento aguardando resposta</td></tr>';return;}
-  e.innerHTML=un.slice(0,50).map(c=>{
-    const wT=c.lastRcvMsgTime||c.beginTime,wS=el(wT);
+  if(!pending.length){e.innerHTML='<tr class="empty-row"><td colspan="7">nenhum cliente aguardando resposta agora</td></tr>';return;}
+  e.innerHTML=pending.slice(0,50).map(c=>{
+    const wT=c.lastRcvMsgTime||c.beginTime, wS=el(wT);
     const nm=esc(c.clientName||c.clientNumber||c.clientId||'—');
     const ag=c.onQueue?'<span class="badge badge-blue">na fila</span>':(c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'—');
-    return'<tr><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'—')+'</span></td><td class="mono '+wCls(wS)+'">'+fEl(wT)+'</td><td class="mono">'+ag+'</td><td>'+urgB(wS)+'</td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'—')+'</td></tr>';
+    const rowCls=wS>3600?' class="row-critical"':'';
+    return'<tr'+rowCls+'><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'—')+'</span></td><td class="mono '+wCls(wS)+'">'+fEl(wT)+'</td><td class="mono">'+ag+'</td><td>'+urgB(wS)+'</td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'—')+'</td></tr>';
   }).join('');
 }
 
@@ -489,27 +438,21 @@ function renderAll(f){
   e.innerHTML=s.slice(0,100).map(c=>{
     const nm=esc(c.clientName||c.clientNumber||c.clientId||'—');
     const ag=c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'—';
-    const st=c.onQueue?'<span class="badge badge-blue">fila</span>':c.userId?'<span class="badge badge-green">agente</span>':'<span class="badge badge-gray">—</span>';
-    return'<tr><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'—')+'</span></td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono">'+(c.lastRcvMsgTime?fEl(c.lastRcvMsgTime):'—')+'</td><td class="mono">'+(c.lastSendMsgTime?fEl(c.lastSendMsgTime):'—')+'</td><td class="mono" style="color:var(--text2)">'+ag+'</td><td>'+st+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'—')+'</td></tr>';
+    return'<tr><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'—')+'</span></td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono">'+(c.lastRcvMsgTime?fEl(c.lastRcvMsgTime):'—')+'</td><td class="mono">'+(c.lastSendMsgTime?fEl(c.lastSendMsgTime):'—')+'</td><td class="mono" style="color:var(--text2)">'+ag+'</td><td>'+getSituation(c)+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'—')+'</td></tr>';
   }).join('');
 }
 
 window.addEventListener('DOMContentLoaded',()=>{
   const k=localStorage.getItem(SK),u=localStorage.getItem(SU);
   if(k&&u){
-    document.getElementById('inp-key').value=k;
-    document.getElementById('inp-url').value=u;
+    document.getElementById('inp-key').value=k;document.getElementById('inp-url').value=u;
     document.getElementById('splash-msg').textContent='conectando...';
-    BASE=u.replace(/\/$/,'');GKEY=k;
-    connected=true;
+    BASE=u.replace(/\/$/,'');GKEY=k;connected=true;
     document.getElementById('setup').classList.add('hidden');
     document.getElementById('main').style.display='block';
     document.getElementById('filter-bar').classList.add('visible');
     fetchAll().then(startTimer);
-  } else {
-    document.getElementById('splash').classList.add('hidden');
-    document.getElementById('setup').classList.remove('hidden');
-  }
+  }else{document.getElementById('splash').classList.add('hidden');document.getElementById('setup').classList.remove('hidden');}
 });
 document.getElementById('inp-key').addEventListener('keydown',e=>{if(e.key==='Enter')connect();});
 </script>
