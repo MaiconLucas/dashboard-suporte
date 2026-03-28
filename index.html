@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Ops Center — Único Suporte</title>
+<title>Ops Center â Ãnico Suporte</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -206,31 +206,55 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
 .splash-msg{font-family:var(--mono);font-size:11px;color:var(--text3);}
 .alert-bar{background:var(--amber-dim);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:.6rem 1rem;font-size:12px;color:var(--amber);margin-bottom:1rem;display:none;}
 .alert-bar.show{display:block;}
+
+.ranking-list{display:flex;flex-direction:column;gap:6px;}
+.ranking-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:8px;transition:all .2s;cursor:pointer;}
+.ranking-item:hover{border-color:var(--border2);transform:translateX(2px);}
+.ranking-item.rank-critical{border-left-color:var(--red);}
+.ranking-item.rank-urgent{border-left-color:var(--amber);}
+.ranking-item.rank-ok{border-left-color:var(--green);}
+.rank-pos{font-family:var(--mono);font-size:11px;color:var(--text3);width:18px;flex-shrink:0;text-align:center;}
+.rank-avatar{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:500;flex-shrink:0;}
+.rank-critical .rank-avatar{background:var(--red-dim);color:var(--red);}
+.rank-urgent .rank-avatar{background:var(--amber-dim);color:var(--amber);}
+.rank-ok .rank-avatar{background:var(--green-dim);color:var(--green);}
+.rank-info{flex:1;overflow:hidden;}
+.rank-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.rank-meta{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:1px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.rank-stats{display:flex;gap:12px;flex-shrink:0;align-items:center;}
+.rank-stat{text-align:right;}
+.rank-stat-val{font-family:var(--mono);font-size:16px;font-weight:500;line-height:1;}
+.rank-stat-val.red{color:var(--red);}.rank-stat-val.amber{color:var(--amber);}.rank-stat-val.green{color:var(--green);}
+.rank-stat-label{font-family:var(--mono);font-size:9px;color:var(--text3);text-transform:uppercase;}
+.rank-bar-col{display:flex;flex-direction:column;gap:3px;min-width:65px;}
+.rank-bar-wrap{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.rank-bar{height:100%;border-radius:2px;transition:width .6s ease;}
+.rank-bar-label{font-family:var(--mono);font-size:9px;color:var(--text3);}
 </style>
 </head>
 <body>
 
 <div id="splash">
-  <div class="splash-logo">Único · Ops Center</div>
+  <div class="splash-logo">Ãnico Â· Ops Center</div>
   <div class="splash-ring"></div>
   <div class="splash-msg" id="splash-msg">inicializando...</div>
 </div>
 
 <div id="setup" class="hidden">
   <div class="setup-box">
-    <div class="setup-logo"><div class="setup-logo-dot"></div>Único Ops Center</div>
+    <div class="setup-logo"><div class="setup-logo-dot"></div>Ãnico Ops Center</div>
     <div class="setup-title">Conectar ao sistema</div>
-    <div class="setup-sub">Configure uma vez — salvo no navegador automaticamente.</div>
+    <div class="setup-sub">Configure uma vez â salvo no navegador automaticamente.</div>
     <div class="setup-field">
-      <label>URL da instância</label>
+      <label>URL da instÃ¢ncia</label>
       <input type="text" id="inp-url" value="https://unicocontato.atenderbem.com"/>
     </div>
     <div class="setup-field">
       <label>apiKey global</label>
-      <input type="password" id="inp-key" placeholder="••••••••••••••••••"/>
-      <div class="setup-hint">Configurações → Geral. Salva com segurança no seu navegador.</div>
+      <input type="password" id="inp-key" placeholder="â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢â¢"/>
+      <div class="setup-hint">ConfiguraÃ§Ãµes â Geral. Salva com seguranÃ§a no seu navegador.</div>
     </div>
-    <button class="btn-setup" onclick="connect()">Conectar →</button>
+    <button class="btn-setup" onclick="connect()">Conectar â</button>
     <div class="setup-error" id="setup-error"></div>
   </div>
 </div>
@@ -238,8 +262,8 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
 <div class="topbar">
   <div class="brand">
     <div class="brand-dot"></div>
-    <span class="brand-name">Único Ops</span>
-    <span class="brand-ver">v3.0</span>
+    <span class="brand-name">Ãnico Ops</span>
+    <span class="brand-ver">v3.1</span>
   </div>
   <span class="update-time" id="last-update"></span>
   <div class="topbar-right">
@@ -250,10 +274,10 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
     </select>
     <div class="status-pill">
       <div class="dot" id="status-dot"></div>
-      <span class="status-txt" id="status-txt">—</span>
+      <span class="status-txt" id="status-txt">â</span>
     </div>
-    <button class="btn btn-accent" onclick="fetchAll()">↺ Sync</button>
-    <button class="btn" onclick="resetSetup()" title="Configurações">⚙</button>
+    <button class="btn btn-accent" onclick="fetchAll()">âº Sync</button>
+    <button class="btn" onclick="resetSetup()" title="ConfiguraÃ§Ãµes">â</button>
   </div>
 </div>
 
@@ -264,8 +288,8 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
   <span class="filter-label">Agente</span>
   <select class="filter-sel" id="filter-agent" onchange="applyFilters()"><option value="">Todos os agentes</option></select>
   <div class="fdivider"></div>
-  <input class="filter-input" type="text" id="filter-client" placeholder="Buscar cliente, número ou protocolo..." oninput="applyFilters()"/>
-  <button class="btn-clear" onclick="clearFilters()">✕ Limpar</button>
+  <input class="filter-input" type="text" id="filter-client" placeholder="Buscar cliente, nÃºmero ou protocolo..." oninput="applyFilters()"/>
+  <button class="btn-clear" onclick="clearFilters()">â Limpar</button>
 </div>
 
 <div class="main" id="main" style="display:none">
@@ -275,29 +299,29 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
   <!-- KPIs -->
   <div class="sec">KPIs em tempo real</div>
   <div class="kpi-grid">
-    <div class="kpi kpi-accent"><div class="kpi-label">Abertos agora</div><div class="kpi-value" id="m-open">—</div><div class="kpi-sub" id="m-queue-sub">—</div></div>
-    <div class="kpi kpi-red"><div class="kpi-label">Aguard. resposta</div><div class="kpi-value red" id="m-unans">—</div><div class="kpi-sub">cliente pendente</div></div>
-    <div class="kpi kpi-green"><div class="kpi-label">Agente respondeu</div><div class="kpi-value green" id="m-answered">—</div><div class="kpi-sub">aguardando cliente</div></div>
-    <div class="kpi kpi-accent"><div class="kpi-label">Respondidos hoje</div><div class="kpi-value" id="m-resp">—</div><div class="kpi-sub">encerrados</div></div>
-    <div class="kpi kpi-green"><div class="kpi-label">Agentes online</div><div class="kpi-value" id="m-agents">—</div><div class="kpi-sub">logados agora</div></div>
-    <div class="kpi"><div class="kpi-label">TMA</div><div class="kpi-value sm" id="m-tma">—</div><div class="kpi-sub">tempo médio atend.</div></div>
-    <div class="kpi"><div class="kpi-label">TMPR</div><div class="kpi-value sm" id="m-tmpr">—</div><div class="kpi-sub">tempo 1ª resposta</div></div>
-    <div class="kpi"><div class="kpi-label">NPS médio</div><div class="kpi-value" id="m-nps">—</div><div class="kpi-sub" id="m-nps-sub">—</div></div>
+    <div class="kpi kpi-accent"><div class="kpi-label">Abertos agora</div><div class="kpi-value" id="m-open">â</div><div class="kpi-sub" id="m-queue-sub">â</div></div>
+    <div class="kpi kpi-red"><div class="kpi-label">Aguard. resposta</div><div class="kpi-value red" id="m-unans">â</div><div class="kpi-sub">cliente pendente</div></div>
+    <div class="kpi kpi-green"><div class="kpi-label">Agente respondeu</div><div class="kpi-value green" id="m-answered">â</div><div class="kpi-sub">aguardando cliente</div></div>
+    <div class="kpi kpi-accent"><div class="kpi-label">Respondidos hoje</div><div class="kpi-value" id="m-resp">â</div><div class="kpi-sub">encerrados</div></div>
+    <div class="kpi kpi-green"><div class="kpi-label">Agentes online</div><div class="kpi-value" id="m-agents">â</div><div class="kpi-sub">logados agora</div></div>
+    <div class="kpi"><div class="kpi-label">TMA</div><div class="kpi-value sm" id="m-tma">â</div><div class="kpi-sub">tempo mÃ©dio atend.</div></div>
+    <div class="kpi"><div class="kpi-label">TMPR</div><div class="kpi-value sm" id="m-tmpr">â</div><div class="kpi-sub">tempo 1Âª resposta</div></div>
+    <div class="kpi"><div class="kpi-label">NPS mÃ©dio</div><div class="kpi-value" id="m-nps">â</div><div class="kpi-sub" id="m-nps-sub">â</div></div>
   </div>
 
-  <!-- GRÁFICOS LINHA 1 -->
-  <div class="sec">Análise visual</div>
+  <!-- GRÃFICOS LINHA 1 -->
+  <div class="sec">AnÃ¡lise visual</div>
   <div class="chart-grid">
 
-    <!-- Distribuição de urgência - Donut -->
+    <!-- DistribuiÃ§Ã£o de urgÃªncia - Donut -->
     <div class="chart-card">
-      <div class="chart-title">Urgência dos pendentes</div>
+      <div class="chart-title">UrgÃªncia dos pendentes</div>
       <div style="display:flex;gap:16px;align-items:center;height:200px;">
         <div style="flex:1;position:relative;"><canvas id="chartUrgency"></canvas></div>
         <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
-          <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span><span id="leg-critical" style="color:var(--text2)">Crítico (>60m): 0</span></div>
+          <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span><span id="leg-critical" style="color:var(--text2)">CrÃ­tico (>60m): 0</span></div>
           <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block"></span><span id="leg-urgent" style="color:var(--text2)">Urgente (>30m): 0</span></div>
-          <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);opacity:.6;display:inline-block"></span><span id="leg-attention" style="color:var(--text2)">Atenção (>10m): 0</span></div>
+          <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);opacity:.6;display:inline-block"></span><span id="leg-attention" style="color:var(--text2)">AtenÃ§Ã£o (>10m): 0</span></div>
           <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span><span id="leg-normal" style="color:var(--text2)">Normal (<10m): 0</span></div>
         </div>
       </div>
@@ -315,13 +339,13 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
 
     <!-- Tempo de espera - histograma -->
     <div class="chart-card">
-      <div class="chart-title">Distribuição tempo de espera (atendimentos abertos)</div>
+      <div class="chart-title">DistribuiÃ§Ã£o tempo de espera (atendimentos abertos)</div>
       <div class="chart-wrap"><canvas id="chartWait"></canvas></div>
     </div>
 
-    <!-- Situação dos atendimentos - barras empilhadas -->
+    <!-- SituaÃ§Ã£o dos atendimentos - barras empilhadas -->
     <div class="chart-card">
-      <div class="chart-title">Situação dos atendimentos por fila</div>
+      <div class="chart-title">SituaÃ§Ã£o dos atendimentos por fila</div>
       <div class="chart-wrap"><canvas id="chartStatus"></canvas></div>
     </div>
 
@@ -334,12 +358,12 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
       <div class="chart-title">NPS geral do dia</div>
       <div class="gauge-wrap">
         <canvas id="chartNPS" width="200" height="120"></canvas>
-        <div class="gauge-val" id="gauge-nps-val">—</div>
+        <div class="gauge-val" id="gauge-nps-val">â</div>
         <div class="gauge-label" id="gauge-nps-label">sem pesquisas respondidas</div>
       </div>
     </div>
 
-    <!-- Saúde das filas - barras de progresso -->
+    <!-- SaÃºde das filas - barras de progresso -->
     <div class="chart-card">
       <div class="chart-title">Carga por fila (abertos vs respondidos hoje)</div>
       <div class="health-list" id="health-list" style="height:200px;overflow-y:auto;padding-right:4px;"></div>
@@ -348,19 +372,29 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
   </div>
 
   <!-- ALERTAS / TIMELINE -->
-  <div class="sec">Radar de urgência — clientes aguardando resposta <span class="sec-count red" id="unans-count">0</span></div>
+  <div class="sec">Radar de urgÃªncia â clientes aguardando resposta <span class="sec-count red" id="unans-count">0</span></div>
   <div class="chart-grid" style="margin-top:0;">
     <div class="chart-card" style="grid-column:span 1;">
-      <div class="chart-title">Fila crítica</div>
+      <div class="chart-title">Fila crÃ­tica</div>
       <div class="timeline" id="timeline-critical"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Tempo médio de resposta por agente</div>
+      <div class="chart-title">Tempo mÃ©dio de resposta por agente</div>
       <div class="chart-wrap"><canvas id="chartAgentTMA"></canvas></div>
     </div>
   </div>
 
-  <!-- AGENTES -->
+  
+  <!-- RANKING AGENTES PENDENTES -->
+  <div class="sec">Ranking — quem está deixando clientes sem resposta <span class="sec-count red" id="ranking-count">0</span></div>
+  <div class="chart-grid">
+    <div><div class="ranking-list" id="ranking-agents"></div></div>
+    <div class="chart-card">
+      <div class="chart-title">Pendentes por agente (por urgência)</div>
+      <div class="chart-wrap"><canvas id="chartAgentPending"></canvas></div>
+    </div>
+  </div>
+<!-- AGENTES -->
   <div id="agents-section" style="display:none">
     <div class="sec">Agentes <span class="sec-count" id="agents-count">0</span></div>
     <div class="agents-grid" id="agents-grid"></div>
@@ -379,7 +413,7 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
       <thead><tr>
         <th style="width:19%">Cliente</th><th style="width:13%">Fila</th>
         <th style="width:11%">Aguardando</th><th style="width:13%">Agente</th>
-        <th style="width:10%">Urgência</th><th style="width:10%">Aberto há</th>
+        <th style="width:10%">UrgÃªncia</th><th style="width:10%">Aberto hÃ¡</th>
         <th style="width:24%">Protocolo</th>
       </tr></thead>
       <tbody id="unans-body"></tbody>
@@ -392,9 +426,9 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
     <table>
       <thead><tr>
         <th style="width:16%">Cliente</th><th style="width:13%">Fila</th>
-        <th style="width:10%">Aberto há</th><th style="width:11%">Últ. rcv</th>
-        <th style="width:11%">Últ. env.</th><th style="width:13%">Agente</th>
-        <th style="width:14%">Situação</th><th style="width:12%">Protocolo</th>
+        <th style="width:10%">Aberto hÃ¡</th><th style="width:11%">Ãlt. rcv</th>
+        <th style="width:11%">Ãlt. env.</th><th style="width:13%">Agente</th>
+        <th style="width:14%">SituaÃ§Ã£o</th><th style="width:12%">Protocolo</th>
       </tr></thead>
       <tbody id="all-body"></tbody>
     </table>
@@ -415,13 +449,13 @@ Chart.defaults.font.family="'DM Mono', monospace";
 Chart.defaults.font.size=10;
 
 // UTILS
-function fmt(s){if(!s||s===0)return'—';s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;if(h>0)return h+'h'+m+'m';if(m>0)return m+'m'+sec+'s';return sec+'s';}
+function fmt(s){if(!s||s===0)return'â';s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;if(h>0)return h+'h'+m+'m';if(m>0)return m+'m'+sec+'s';return sec+'s';}
 function el(ts){return(!ts||ts===0)?0:Math.floor(Date.now()/1000)-ts;}
-function fEl(ts){const s=el(ts);return s>0?fmt(s):'—';}
+function fEl(ts){const s=el(ts);return s>0?fmt(s):'â';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function isPending(c){if(c.onQueue)return true;if(!c.userResponded)return true;if(c.lastRcvMsgTime&&!c.lastSendMsgTime)return true;if(c.lastRcvMsgTime&&c.lastSendMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime)return true;return false;}
-function getSituation(c){if(c.onQueue)return'<span class="badge badge-blue">● na fila</span>';if(!c.userResponded)return'<span class="badge badge-pending">⏳ aguard. 1ª resp.</span>';if(c.lastRcvMsgTime&&!c.lastSendMsgTime)return'<span class="badge badge-pending">⏳ aguard. resposta</span>';if(c.lastRcvMsgTime&&c.lastSendMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime)return'<span class="badge badge-pending">⏳ cliente respondeu</span>';return'<span class="badge badge-green">✓ agente respondeu</span>';}
-function urgB(s){if(s>3600)return'<span class="badge badge-red">● crítico</span>';if(s>1800)return'<span class="badge badge-amber">● urgente</span>';if(s>600)return'<span class="badge badge-amber">○ atenção</span>';return'<span class="badge badge-green">○ normal</span>';}
+function getSituation(c){if(c.onQueue)return'<span class="badge badge-blue">â na fila</span>';if(!c.userResponded)return'<span class="badge badge-pending">â³ aguard. 1Âª resp.</span>';if(c.lastRcvMsgTime&&!c.lastSendMsgTime)return'<span class="badge badge-pending">â³ aguard. resposta</span>';if(c.lastRcvMsgTime&&c.lastSendMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime)return'<span class="badge badge-pending">â³ cliente respondeu</span>';return'<span class="badge badge-green">â agente respondeu</span>';}
+function urgB(s){if(s>3600)return'<span class="badge badge-red">â crÃ­tico</span>';if(s>1800)return'<span class="badge badge-amber">â urgente</span>';if(s>600)return'<span class="badge badge-amber">â atenÃ§Ã£o</span>';return'<span class="badge badge-green">â normal</span>';}
 function wCls(s){return s>3600?'wait-critical':s>1800?'wait-urgent':'';}
 function nCls(n){return n>=8?'green':n>=6?'amber':'red';}
 function ini(name){return name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';}
@@ -452,10 +486,10 @@ async function connect(){
     document.getElementById('main').style.display='block';
     document.getElementById('filter-bar').classList.add('visible');
     await fetchAll();startTimer();
-  }catch(e){showSetupErr('Erro: '+e.message);document.querySelector('.btn-setup').textContent='Conectar →';}
+  }catch(e){showSetupErr('Erro: '+e.message);document.querySelector('.btn-setup').textContent='Conectar â';}
 }
 function showSetupErr(msg){const e=document.getElementById('setup-error');e.textContent=msg;e.className='setup-error show';}
-function resetSetup(){connected=false;if(timer)clearInterval(timer);document.getElementById('main').style.display='none';document.getElementById('filter-bar').classList.remove('visible');document.getElementById('setup').classList.remove('hidden');setSt('','—');}
+function resetSetup(){connected=false;if(timer)clearInterval(timer);document.getElementById('main').style.display='none';document.getElementById('filter-bar').classList.remove('visible');document.getElementById('setup').classList.remove('hidden');setSt('','â');}
 function startTimer(){if(timer)clearInterval(timer);timer=setInterval(fetchAll,intervalSecs*1000);}
 function changeInterval(){intervalSecs=parseInt(document.getElementById('interval-sel').value);if(connected)startTimer();}
 
@@ -503,9 +537,9 @@ function clearFilters(){document.getElementById('filter-queue').value='';documen
 
 function renderChips(){
   const ch=[];
-  if(fQ){const q=allQueues.find(q=>String(q.id)===fQ);ch.push('<div class="chip">Fila: '+esc(q?q.name:fQ)+'<button onclick="document.getElementById(\'filter-queue\').value=\'\';applyFilters()">✕</button></div>');}
-  if(fA){const a=agentMap[fA];ch.push('<div class="chip">Agente: '+esc(a?a.name:'ID '+fA)+'<button onclick="document.getElementById(\'filter-agent\').value=\'\';applyFilters()">✕</button></div>');}
-  if(fC){ch.push('<div class="chip">Busca: "'+esc(fC)+'"<button onclick="document.getElementById(\'filter-client\').value=\'\';applyFilters()">✕</button></div>');}
+  if(fQ){const q=allQueues.find(q=>String(q.id)===fQ);ch.push('<div class="chip">Fila: '+esc(q?q.name:fQ)+'<button onclick="document.getElementById(\'filter-queue\').value=\'\';applyFilters()">â</button></div>');}
+  if(fA){const a=agentMap[fA];ch.push('<div class="chip">Agente: '+esc(a?a.name:'ID '+fA)+'<button onclick="document.getElementById(\'filter-agent\').value=\'\';applyFilters()">â</button></div>');}
+  if(fC){ch.push('<div class="chip">Busca: "'+esc(fC)+'"<button onclick="document.getElementById(\'filter-client\').value=\'\';applyFilters()">â</button></div>');}
   document.getElementById('chips').innerHTML=ch.join('');
 }
 
@@ -524,28 +558,72 @@ function renderKPIs(f){
   document.getElementById('m-answered').textContent=answered.length;
   document.getElementById('m-resp').textContent=tR;
   document.getElementById('m-agents').textContent=tA;
-  document.getElementById('m-tma').textContent=tmaC>0?fmt(Math.round(tmaS/tmaC)):'—';
-  document.getElementById('m-tmpr').textContent=tmC>0?fmt(Math.round(tmS/tmC)):'—';
-  const nEl=document.getElementById('m-nps');nEl.textContent=np||'—';nEl.className='kpi-value '+(np?nCls(parseFloat(np)):'')+(np?' sm':'');
+  document.getElementById('m-tma').textContent=tmaC>0?fmt(Math.round(tmaS/tmaC)):'â';
+  document.getElementById('m-tmpr').textContent=tmC>0?fmt(Math.round(tmS/tmC)):'â';
+  const nEl=document.getElementById('m-nps');nEl.textContent=np||'â';nEl.className='kpi-value '+(np?nCls(parseFloat(np)):'')+(np?' sm':'');
   document.getElementById('m-nps-sub').textContent=nT+' pesquisas respondidas';
   renderNPSGauge(np);
+}
+
+
+function renderAgentRanking(f){
+  const pending=f.filter(isPending);
+  const byAgent={};
+  pending.filter(c=>c.userId).forEach(c=>{
+    if(!byAgent[c.userId])byAgent[c.userId]={uid:c.userId,chats:[],maxWait:0,critCount:0,urgCount:0,attCount:0};
+    byAgent[c.userId].chats.push(c);
+    const wS=el(c.lastRcvMsgTime||c.beginTime);
+    byAgent[c.userId].maxWait=Math.max(byAgent[c.userId].maxWait,wS);
+    if(wS>3600)byAgent[c.userId].critCount++;
+    else if(wS>1800)byAgent[c.userId].urgCount++;
+    else byAgent[c.userId].attCount++;
+  });
+  const inQueue=pending.filter(c=>c.onQueue||!c.userId);
+  const ranked=Object.values(byAgent).sort((a,b)=>{if(b.critCount!==a.critCount)return b.critCount-a.critCount;if(b.urgCount!==a.urgCount)return b.urgCount-a.urgCount;return b.chats.length-a.chats.length;});
+  const el3=document.getElementById('ranking-count');
+  if(el3)el3.textContent=ranked.length+(inQueue.length?' agentes + '+inQueue.length+' na fila':' agentes');
+  const maxPend=Math.max(...ranked.map(r=>r.chats.length),1);
+  const listEl=document.getElementById('ranking-agents');
+  if(!listEl)return;
+  if(!ranked.length&&!inQueue.length){listEl.innerHTML='<div style="color:var(--green);font-family:var(--mono);font-size:11px;padding:.75rem 1rem;background:var(--green-dim);border:1px solid rgba(34,197,94,.2);border-radius:8px;text-align:center">\u2713 Todos os agentes responderam seus clientes</div>';if(charts['chartAgentPending'])charts['chartAgentPending'].destroy();return;}
+  const items=ranked.map((r,i)=>{
+    const a=agentMap[r.uid]||{name:'Agente '+r.uid,available:false,paused:false};
+    const cls=r.critCount>0?'rank-critical':r.urgCount>0?'rank-urgent':'rank-ok';
+    const barPct=Math.round((r.chats.length/maxPend)*100);
+    const barColor=r.critCount>0?'var(--red)':r.urgCount>0?'var(--amber)':'var(--green)';
+    const stDot=a.paused?'var(--amber)':a.available?'var(--green)':'var(--red)';
+    const tags=[];
+    if(r.critCount>0)tags.push('<span style="color:var(--red);font-weight:600">'+r.critCount+' cr\u00edtico'+(r.critCount>1?'s':'')+'</span>');
+    if(r.urgCount>0)tags.push('<span style="color:var(--amber);font-weight:600">'+r.urgCount+' urgente'+(r.urgCount>1?'s':'')+'</span>');
+    tags.push('<span>m\u00e1x '+fmt(r.maxWait)+'</span>');
+    return '<div class="ranking-item '+cls+'" onclick="document.getElementById(\'filter-agent\').value=\''+r.uid+'\';applyFilters()" title="Clique para ver este agente">'+
+      '<div class="rank-pos">'+(i+1)+'</div>'+
+      '<div class="rank-avatar">'+esc(ini(a.name))+'</div>'+
+      '<div class="rank-info"><div class="rank-name">'+esc(a.name)+'</div><div class="rank-meta"><span style="color:'+stDot+'">\u25cf</span>'+tags.join('')+'</div></div>'+
+      '<div class="rank-stats"><div class="rank-stat"><div class="rank-stat-val '+(r.critCount>0?'red':r.urgCount>0?'amber':'green')+'">'+r.chats.length+'</div><div class="rank-stat-label">pendentes</div></div>'+
+      '<div class="rank-bar-col"><div class="rank-bar-wrap"><div class="rank-bar" style="width:'+barPct+'%;background:'+barColor+'"></div></div><div class="rank-bar-label">'+barPct+'% do m\u00e1x</div></div></div></div>';
+  });
+  if(inQueue.length){items.push('<div class="ranking-item" style="border-left-color:var(--blue);"><div class="rank-pos">\u2014</div><div class="rank-avatar" style="background:var(--blue-dim);color:var(--blue)">FI</div><div class="rank-info"><div class="rank-name">Na fila \u2014 sem agente</div><div class="rank-meta">aguardando distribui\u00e7\u00e3o</div></div><div class="rank-stats"><div class="rank-stat"><div class="rank-stat-val" style="color:var(--blue)">'+inQueue.length+'</div><div class="rank-stat-label">na fila</div></div></div></div>');}
+  listEl.innerHTML=items.join('');
+  const top8=ranked.slice(0,8);
+  mkChart('chartAgentPending','bar',{labels:top8.map(r=>{const a=agentMap[r.uid];return a?a.name.split(' ')[0]:'A'+r.uid;}),datasets:[{label:'Cr\u00edtico',data:top8.map(r=>r.critCount),backgroundColor:'rgba(239,68,68,.8)',borderRadius:3,stack:'s'},{label:'Urgente',data:top8.map(r=>r.urgCount),backgroundColor:'rgba(245,158,11,.8)',borderRadius:3,stack:'s'},{label:'Normal',data:top8.map(r=>r.attCount),backgroundColor:'rgba(34,197,94,.6)',borderRadius:3,stack:'s'}]},{plugins:{legend:{display:true,position:'top',labels:{color:'#55555e',boxWidth:8,padding:10}}},scales:{x:{grid:{display:false},ticks:{color:'#8b8b96'}},y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#55555e',stepSize:1},stacked:true}}});
 }
 
 function renderCharts(f){
   const now=Math.floor(Date.now()/1000);
   const pending=f.filter(isPending);
 
-  // 1) DONUT URGÊNCIA
+  // 1) DONUT URGÃNCIA
   const crit=pending.filter(c=>el(c.lastRcvMsgTime||c.beginTime)>3600).length;
   const urg=pending.filter(c=>{const s=el(c.lastRcvMsgTime||c.beginTime);return s>1800&&s<=3600;}).length;
   const att=pending.filter(c=>{const s=el(c.lastRcvMsgTime||c.beginTime);return s>600&&s<=1800;}).length;
   const norm=pending.filter(c=>el(c.lastRcvMsgTime||c.beginTime)<=600).length;
-  document.getElementById('leg-critical').textContent='Crítico (>60m): '+crit;
+  document.getElementById('leg-critical').textContent='CrÃ­tico (>60m): '+crit;
   document.getElementById('leg-urgent').textContent='Urgente (>30m): '+urg;
-  document.getElementById('leg-attention').textContent='Atenção (>10m): '+att;
+  document.getElementById('leg-attention').textContent='AtenÃ§Ã£o (>10m): '+att;
   document.getElementById('leg-normal').textContent='Normal (<10m): '+norm;
   mkChart('chartUrgency','doughnut',{
-    labels:['Crítico','Urgente','Atenção','Normal'],
+    labels:['CrÃ­tico','Urgente','AtenÃ§Ã£o','Normal'],
     datasets:[{data:[crit,urg,att,norm],backgroundColor:['#ef4444','#f59e0b','rgba(245,158,11,.5)','#22c55e'],borderWidth:0,hoverOffset:4}]
   },{plugins:{legend:{display:false}},cutout:'65%'});
 
@@ -629,7 +707,7 @@ function renderNPSGauge(npsVal){
     document.getElementById('gauge-nps-val').style.color=color;
     document.getElementById('gauge-nps-label').textContent='de 10 pontos';
   }else{
-    document.getElementById('gauge-nps-val').textContent='—';
+    document.getElementById('gauge-nps-val').textContent='â';
     document.getElementById('gauge-nps-val').style.color='var(--text3)';
     document.getElementById('gauge-nps-label').textContent='sem pesquisas respondidas';
   }
@@ -640,13 +718,13 @@ function renderTimeline(f){
   const el2=document.getElementById('timeline-critical');
   document.getElementById('unans-count').textContent=pending.length;
   document.getElementById('pending-count').textContent=pending.length;
-  if(!pending.length){el2.innerHTML='<div style="color:var(--text3);font-family:var(--mono);font-size:11px;padding:.5rem">✓ Nenhum cliente aguardando</div>';return;}
+  if(!pending.length){el2.innerHTML='<div style="color:var(--text3);font-family:var(--mono);font-size:11px;padding:.5rem">â Nenhum cliente aguardando</div>';return;}
   el2.innerHTML=pending.slice(0,15).map(c=>{
     const wS=el(c.lastRcvMsgTime||c.beginTime);
     const cls=wS>3600?'critical':wS>1800?'urgent':'ok';
-    const nm=esc(c.clientName||c.clientNumber||c.clientId||'—');
-    const ag=c.onQueue?'na fila':(c.userId?(agentMap[c.userId]?agentMap[c.userId].name.split(' ')[0]:'agente '+c.userId):'—');
-    return'<div class="tl-item '+cls+'"><div class="tl-dot"></div><div class="tl-body"><div class="tl-name">'+nm+'</div><div class="tl-meta">'+esc(c._qN||'—')+' · '+ag+' · aguardando '+fmt(wS)+'</div></div></div>';
+    const nm=esc(c.clientName||c.clientNumber||c.clientId||'â');
+    const ag=c.onQueue?'na fila':(c.userId?(agentMap[c.userId]?agentMap[c.userId].name.split(' ')[0]:'agente '+c.userId):'â');
+    return'<div class="tl-item '+cls+'"><div class="tl-dot"></div><div class="tl-body"><div class="tl-name">'+nm+'</div><div class="tl-meta">'+esc(c._qN||'â')+' Â· '+ag+' Â· aguardando '+fmt(wS)+'</div></div></div>';
   }).join('');
 }
 
@@ -657,14 +735,14 @@ function renderAgents(f){
   const ids=[...new Set(f.filter(c=>c.userId).map(c=>c.userId))];
   document.getElementById('agents-count').textContent=ids.length;
   const e=document.getElementById('agents-grid');
-  if(!ids.length){e.innerHTML='<p style="color:var(--text3);font-family:var(--mono);font-size:11px">Nenhum agente nessa seleção.</p>';return;}
+  if(!ids.length){e.innerHTML='<p style="color:var(--text3);font-family:var(--mono);font-size:11px">Nenhum agente nessa seleÃ§Ã£o.</p>';return;}
   e.innerHTML=ids.map(u=>{
     const a=agentMap[u]||{id:u,name:'Agente '+u};
     const ca=f.filter(c=>c.userId===u).length;
     const pend=f.filter(c=>c.userId===u&&isPending(c)).length;
     const stC=a.paused?'var(--amber)':a.available?'var(--green)':'var(--red)';
-    const stL=a.paused?'pausa':a.available?'disponível':'indisponível';
-    return'<div class="agent-card"><div class="agent-header"><div class="agent-avatar">'+esc(ini(a.name))+'</div><div style="overflow:hidden;flex:1"><div class="agent-name">'+esc(a.name)+'</div><div class="agent-status" style="color:'+stC+'">● '+stL+'</div></div></div><div class="agent-stats"><div><div class="as-label">Ativos</div><div class="as-val '+(ca>8?'red':ca>5?'amber':'')+'">'+ca+'</div></div><div><div class="as-label">Pendentes</div><div class="as-val '+(pend>0?'amber':'green')+'">'+pend+'</div></div><div><div class="as-label">Hoje</div><div class="as-val">'+(a.chatsToday||'—')+'</div></div><div><div class="as-label">TMA</div><div class="as-val" style="font-size:11px">'+fmt(a.tma)+'</div></div><div><div class="as-label">NPS</div><div class="as-val '+(a.surveys>0?nCls(a.nps):'')+'">'+( a.surveys>0?(a.nps||0).toFixed(1):'—')+'</div></div><div><div class="as-label">Pesq.</div><div class="as-val">'+(a.surveys||0)+'</div></div></div></div>';
+    const stL=a.paused?'pausa':a.available?'disponÃ­vel':'indisponÃ­vel';
+    return'<div class="agent-card"><div class="agent-header"><div class="agent-avatar">'+esc(ini(a.name))+'</div><div style="overflow:hidden;flex:1"><div class="agent-name">'+esc(a.name)+'</div><div class="agent-status" style="color:'+stC+'">â '+stL+'</div></div></div><div class="agent-stats"><div><div class="as-label">Ativos</div><div class="as-val '+(ca>8?'red':ca>5?'amber':'')+'">'+ca+'</div></div><div><div class="as-label">Pendentes</div><div class="as-val '+(pend>0?'amber':'green')+'">'+pend+'</div></div><div><div class="as-label">Hoje</div><div class="as-val">'+(a.chatsToday||'â')+'</div></div><div><div class="as-label">TMA</div><div class="as-val" style="font-size:11px">'+fmt(a.tma)+'</div></div><div><div class="as-label">NPS</div><div class="as-val '+(a.surveys>0?nCls(a.nps):'')+'">'+( a.surveys>0?(a.nps||0).toFixed(1):'â')+'</div></div><div><div class="as-label">Pesq.</div><div class="as-val">'+(a.surveys||0)+'</div></div></div></div>';
   }).join('');
 }
 
@@ -677,7 +755,7 @@ function renderQueues(f){
   if(!list.length){e.innerHTML='';return;}
   e.innerHTML=list.map(q=>{
     const conn=q.connected&&q.authenticated;
-    const nps=q.todaysRespondedSurveys>0?parseFloat(q.todaysSurveyGrade).toFixed(1):'—';
+    const nps=q.todaysRespondedSurveys>0?parseFloat(q.todaysSurveyGrade).toFixed(1):'â';
     const npsC=q.todaysRespondedSurveys>0?nCls(parseFloat(q.todaysSurveyGrade)):'';
     return'<div class="queue-card" onclick="document.getElementById(\'filter-queue\').value=\''+q.id+'\';applyFilters()" title="Filtrar por esta fila"><div class="queue-name">'+esc(q.name)+'</div><div class="queue-stats"><div><div class="qs-label">Abertos</div><div class="qs-val '+(q.openChats>10?'red':q.openChats>5?'amber':'')+'">'+( q.openChats||0)+'</div></div><div><div class="qs-label">Fila</div><div class="qs-val '+(q.chatsOnQueue>3?'red':q.chatsOnQueue>0?'amber':'')+'">'+( q.chatsOnQueue||0)+'</div></div><div><div class="qs-label">Agentes</div><div class="qs-val">'+(q.loggedAgentsCount||0)+'</div></div><div><div class="qs-label">NPS</div><div class="qs-val '+npsC+'">'+nps+'</div></div><div><div class="qs-label">TMA</div><div class="qs-val" style="font-size:11px">'+fmt(q.todaysAvgContactTime)+'</div></div><div><div class="qs-label">Status</div><span class="'+(conn?'conn-ok':'conn-off')+'"><span class="conn-dot"></span>'+(conn?'online':'offline')+'</span></div></div></div>';
   }).join('');
@@ -689,9 +767,9 @@ function renderUnans(f){
   if(!pending.length){e.innerHTML='<tr class="empty-row"><td colspan="7">nenhum cliente aguardando resposta</td></tr>';return;}
   e.innerHTML=pending.slice(0,50).map(c=>{
     const wT=c.lastRcvMsgTime||c.beginTime,wS=el(wT);
-    const nm=esc(c.clientName||c.clientNumber||c.clientId||'—');
-    const ag=c.onQueue?'<span class="badge badge-blue">na fila</span>':(c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'—');
-    return'<tr'+(wS>3600?' class="row-critical"':'')+'><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'—')+'</span></td><td class="mono '+wCls(wS)+'">'+fEl(wT)+'</td><td class="mono">'+ag+'</td><td>'+urgB(wS)+'</td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'—')+'</td></tr>';
+    const nm=esc(c.clientName||c.clientNumber||c.clientId||'â');
+    const ag=c.onQueue?'<span class="badge badge-blue">na fila</span>':(c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'â');
+    return'<tr'+(wS>3600?' class="row-critical"':'')+'><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'â')+'</span></td><td class="mono '+wCls(wS)+'">'+fEl(wT)+'</td><td class="mono">'+ag+'</td><td>'+urgB(wS)+'</td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'â')+'</td></tr>';
   }).join('');
 }
 
@@ -701,9 +779,9 @@ function renderAll(f){
   const e=document.getElementById('all-body');
   if(!s.length){e.innerHTML='<tr class="empty-row"><td colspan="8">nenhum atendimento encontrado</td></tr>';return;}
   e.innerHTML=s.slice(0,100).map(c=>{
-    const nm=esc(c.clientName||c.clientNumber||c.clientId||'—');
-    const ag=c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'—';
-    return'<tr><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'—')+'</span></td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono">'+(c.lastRcvMsgTime?fEl(c.lastRcvMsgTime):'—')+'</td><td class="mono">'+(c.lastSendMsgTime?fEl(c.lastSendMsgTime):'—')+'</td><td class="mono" style="color:var(--text2)">'+ag+'</td><td>'+getSituation(c)+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'—')+'</td></tr>';
+    const nm=esc(c.clientName||c.clientNumber||c.clientId||'â');
+    const ag=c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'â';
+    return'<tr><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'â')+'</span></td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono">'+(c.lastRcvMsgTime?fEl(c.lastRcvMsgTime):'â')+'</td><td class="mono">'+(c.lastSendMsgTime?fEl(c.lastSendMsgTime):'â')+'</td><td class="mono" style="color:var(--text2)">'+ag+'</td><td>'+getSituation(c)+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'â')+'</td></tr>';
   }).join('');
 }
 
