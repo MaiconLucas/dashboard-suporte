@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dashboard Suporte — Único</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a18;font-size:14px;line-height:1.5;min-height:100vh;}
+.topbar{background:#1a1a18;color:#fff;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100;}
+.topbar-title{font-size:15px;font-weight:600;}
+.topbar-sub{font-size:11px;color:#888;margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.dot{width:8px;height:8px;border-radius:50%;background:#888;flex-shrink:0;}
+.dot.ok{background:#1D9E75;}.dot.loading{background:#BA7517;animation:pulse 1s infinite;}.dot.error{background:#E24B4A;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.status-txt{font-size:12px;color:#aaa;}
+.btn{padding:5px 12px;font-size:12px;border:1px solid #444;border-radius:7px;background:transparent;color:#fff;cursor:pointer;}
+.btn:hover{background:#333;}
+.btn-green{border-color:#1D9E75;color:#1D9E75;}.btn-green:hover{background:rgba(29,158,117,.15);}
+.sel-dark{padding:4px 8px;font-size:12px;border:1px solid #444;border-radius:7px;background:#2a2a28;color:#ccc;cursor:pointer;}
+.filter-bar{background:#fff;border-bottom:1px solid #e5e5e2;padding:.75rem 2rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.filter-bar label{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-right:2px;}
+.filter-bar select{padding:6px 10px;font-size:13px;border:1px solid #d3d1c7;border-radius:8px;background:#fff;color:#1a1a18;cursor:pointer;min-width:180px;outline:none;}
+.filter-bar input{padding:6px 10px;font-size:13px;border:1px solid #d3d1c7;border-radius:8px;background:#fff;color:#1a1a18;outline:none;min-width:200px;}
+.filter-bar input::placeholder{color:#b4b2a9;}
+.btn-clear{padding:6px 12px;font-size:13px;border:1px solid #d3d1c7;border-radius:8px;background:#fff;color:#888;cursor:pointer;}
+.divider{width:1px;height:24px;background:#e5e5e2;margin:0 4px;}
+.config-panel{background:#fff;border-bottom:1px solid #e5e5e2;padding:1rem 2rem;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+.field{display:flex;flex-direction:column;gap:3px;}
+.field label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.04em;}
+.field input{padding:7px 10px;border:1px solid #d3d1c7;border-radius:8px;font-size:13px;color:#1a1a18;background:#fff;outline:none;min-width:220px;}
+.field-url input{min-width:320px;}
+.btn-connect{padding:7px 18px;font-size:13px;font-weight:600;border:none;border-radius:8px;background:#1a1a18;color:#fff;cursor:pointer;}
+.main{padding:1.5rem 2rem;max-width:1600px;margin:0 auto;}
+.section-label{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.7rem;margin-top:1.75rem;}
+.section-label:first-child{margin-top:0;}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+.metric{background:#fff;border:1px solid #e5e5e2;border-radius:12px;padding:.9rem 1.1rem;}
+.metric-label{font-size:12px;color:#888;margin-bottom:4px;}
+.metric-value{font-size:28px;font-weight:700;color:#1a1a18;line-height:1;}
+.metric-value.red{color:#E24B4A;}.metric-value.amber{color:#BA7517;}.metric-value.green{color:#0F6E56;}
+.metric-sub{font-size:11px;color:#b4b2a9;margin-top:3px;}
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+.agent-card{background:#fff;border:1px solid #e5e5e2;border-radius:12px;padding:.9rem 1.1rem;}
+.agent-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.agent-avatar{width:36px;height:36px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#185FA5;flex-shrink:0;}
+.agent-name{font-size:13px;font-weight:700;color:#1a1a18;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.agent-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:12px;}
+.as-label{color:#888;font-size:11px;}.as-val{font-weight:700;color:#1a1a18;font-size:13px;}
+.as-val.red{color:#E24B4A;}.as-val.amber{color:#BA7517;}.as-val.green{color:#0F6E56;}
+.queues-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.queue-card{background:#fff;border:1px solid #e5e5e2;border-radius:12px;padding:.9rem 1.1rem;cursor:pointer;transition:border-color .15s;}
+.queue-card:hover{border-color:#888;}
+.queue-name{font-size:13px;font-weight:700;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.queue-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px 6px;font-size:12px;}
+.qs-label{color:#888;font-size:11px;}.qs-val{font-weight:700;color:#1a1a18;font-size:14px;}
+.qs-val.red{color:#E24B4A;}.qs-val.amber{color:#BA7517;}.qs-val.green{color:#0F6E56;}
+.conn-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;}
+.conn-ok{background:#EAF3DE;color:#3B6D11;}.conn-off{background:#FCEBEB;color:#A32D2D;}
+.table-wrap{background:#fff;border:1px solid #e5e5e2;border-radius:12px;overflow:hidden;margin-bottom:.5rem;}
+table{width:100%;border-collapse:collapse;}
+thead th{font-size:11px;font-weight:700;color:#888;text-align:left;padding:9px 14px;background:#f9f8f6;border-bottom:1px solid #e5e5e2;white-space:nowrap;}
+tbody td{padding:9px 14px;border-bottom:1px solid #f1efe8;color:#1a1a18;font-size:13px;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:#fafaf8;}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;}
+.badge-red{background:#FCEBEB;color:#A32D2D;}.badge-amber{background:#FAEEDA;color:#854F0B;}
+.badge-green{background:#EAF3DE;color:#3B6D11;}.badge-gray{background:#F1EFE8;color:#5F5E5A;}
+.queue-tag{font-size:11px;color:#5F5E5A;background:#f1efe8;padding:2px 7px;border-radius:4px;white-space:nowrap;}
+.empty-row td{text-align:center;padding:2rem;color:#b4b2a9;font-size:13px;}
+.wait-critical{color:#E24B4A;font-weight:700;}.wait-urgent{color:#BA7517;font-weight:600;}
+.filter-chip{display:inline-flex;align-items:center;gap:6px;background:#E6F1FB;color:#185FA5;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:.5rem;margin-right:4px;}
+.filter-chip button{background:none;border:none;color:#185FA5;cursor:pointer;font-size:14px;line-height:1;padding:0;}
+.alert-bar{background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:.6rem 1rem;font-size:13px;color:#854F0B;margin-bottom:1rem;display:none;}
+.alert-bar.show{display:block;}
+#splash{position:fixed;inset:0;background:#f5f5f3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:999;}
+#splash.hide{display:none;}
+.spinner{width:36px;height:36px;border:3px solid #e5e5e2;border-top-color:#1a1a18;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.count-badge{font-size:11px;font-weight:700;background:#f1efe8;color:#5F5E5A;padding:1px 7px;border-radius:20px;margin-left:6px;}
+.count-badge.red{background:#FCEBEB;color:#A32D2D;}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div style="font-size:22px;font-weight:700;color:#1a1a18">Dashboard Suporte — Único</div>
+  <div class="spinner"></div>
+  <p id="splash-msg" style="font-size:13px;color:#888">Aguardando conexão...</p>
+</div>
+<div class="topbar">
+  <div><div class="topbar-title">Dashboard Suporte — Único</div><div class="topbar-sub" id="last-update">Não conectado</div></div>
+  <div class="topbar-right">
+    <select class="sel-dark" id="interval-sel" onchange="changeInterval()">
+      <option value="60">1 min</option><option value="120" selected>2 min</option><option value="300">5 min</option>
+    </select>
+    <div style="display:flex;align-items:center;gap:6px;"><div class="dot" id="status-dot"></div><span class="status-txt" id="status-txt">Desconectado</span></div>
+    <button class="btn btn-green" onclick="fetchAll()">↺ Atualizar</button>
+    <button class="btn" onclick="logout()">Sair</button>
+  </div>
+</div>
+<div class="config-panel" id="config-panel">
+  <div class="field field-url"><label>URL base</label><input type="text" id="inp-url" value="https://unicocontato.atenderbem.com"/></div>
+  <div class="field"><label>apiKey global</label><input type="password" id="inp-key" placeholder="Cole sua chave aqui"/></div>
+  <button class="btn-connect" onclick="connect()">Conectar</button>
+</div>
+<div class="filter-bar" id="filter-bar" style="display:none">
+  <label>Fila</label>
+  <select id="filter-queue" onchange="applyFilters()"><option value="">Todas as filas</option></select>
+  <div class="divider"></div>
+  <label>Agente</label>
+  <select id="filter-agent" onchange="applyFilters()"><option value="">Todos os agentes</option></select>
+  <div class="divider"></div>
+  <label>Buscar cliente</label>
+  <input type="text" id="filter-client" placeholder="Nome, número ou protocolo..." oninput="applyFilters()"/>
+  <button class="btn-clear" onclick="clearFilters()">✕ Limpar</button>
+</div>
+<div class="main" id="main-content" style="display:none">
+  <div class="alert-bar" id="alert-bar"></div>
+  <div id="filter-chips"></div>
+  <div class="section-label">Visão geral — hoje</div>
+  <div class="metrics-grid">
+    <div class="metric"><div class="metric-label">Abertos agora</div><div class="metric-value" id="m-open">—</div><div class="metric-sub" id="m-queue-sub">— na fila</div></div>
+    <div class="metric"><div class="metric-label">Sem resposta</div><div class="metric-value red" id="m-unans">—</div><div class="metric-sub">aguardando agente</div></div>
+    <div class="metric"><div class="metric-label">Respondidos hoje</div><div class="metric-value green" id="m-resp">—</div><div class="metric-sub">seleção atual</div></div>
+    <div class="metric"><div class="metric-label">Agentes logados</div><div class="metric-value" id="m-agents">—</div><div class="metric-sub">online agora</div></div>
+    <div class="metric"><div class="metric-label">TMA médio</div><div class="metric-value" id="m-tma" style="font-size:20px">—</div><div class="metric-sub">tempo médio atend.</div></div>
+    <div class="metric"><div class="metric-label">TMPR médio</div><div class="metric-value" id="m-tmpr" style="font-size:20px">—</div><div class="metric-sub">tempo 1ª resposta</div></div>
+    <div class="metric"><div class="metric-label">NPS médio</div><div class="metric-value" id="m-nps">—</div><div class="metric-sub" id="m-nps-sub">— pesquisas</div></div>
+  </div>
+  <div id="agents-section" style="display:none">
+    <div class="section-label" id="lbl-agents">Agentes</div>
+    <div class="agents-grid" id="agents-grid"></div>
+  </div>
+  <div id="queues-section">
+    <div class="section-label">Status das filas</div>
+    <div class="queues-grid" id="queues-grid"></div>
+  </div>
+  <div class="section-label" id="lbl-unans">Sem resposta do agente</div>
+  <div class="table-wrap">
+    <table><thead><tr>
+      <th style="width:20%">Cliente</th><th style="width:16%">Fila</th><th style="width:12%">Aguardando há</th>
+      <th style="width:13%">Agente</th><th style="width:11%">Urgência</th><th style="width:11%">Aberto há</th><th style="width:17%">Protocolo</th>
+    </tr></thead><tbody id="unans-body"></tbody></table>
+  </div>
+  <div class="section-label" id="lbl-all">Todos os atendimentos abertos</div>
+  <div class="table-wrap" style="margin-bottom:2rem">
+    <table><thead><tr>
+      <th style="width:18%">Cliente</th><th style="width:15%">Fila</th><th style="width:11%">Aberto há</th>
+      <th style="width:13%">Última rcv</th><th style="width:13%">Última enviada</th><th style="width:13%">Agente</th><th style="width:10%">Status</th><th style="width:7%">Protocolo</th>
+    </tr></thead><tbody id="all-body"></tbody></table>
+  </div>
+</div>
+<script>
+const SK='dash_unico_key',SU='dash_unico_url';
+let BASE='',GKEY='',timer=null,intervalSecs=120,connected=false;
+let allQueues=[],allChats=[],agentMap={};
+let filterQueue='',filterAgent='',filterClient='';
+function fmtSec(s){if(!s||s===0)return'—';s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;if(h>0)return h+'h '+m+'min';if(m>0)return m+'min '+sec+'s';return sec+'s';}
+function elapsed(ts){return(!ts||ts===0)?0:Math.floor(Date.now()/1000)-ts;}
+function fmtEl(ts){const s=elapsed(ts);return s>0?fmtSec(s):'—';}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function urgBadge(s){if(s>3600)return'<span class="badge badge-red">Crítico</span>';if(s>1800)return'<span class="badge badge-amber">Urgente</span>';if(s>600)return'<span class="badge badge-amber">Atenção</span>';return'<span class="badge badge-green">Normal</span>';}
+function waitCls(s){return s>3600?'wait-critical':s>1800?'wait-urgent':'';}
+function npsClass(n){return n>=8?'green':n>=6?'amber':'red';}
+function initials(name){return name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';}
+function setStatus(state,txt){document.getElementById('status-dot').className='dot '+state;document.getElementById('status-txt').textContent=txt;}
+function showAlert(msg){const el=document.getElementById('alert-bar');el.textContent=msg;el.className='alert-bar show';setTimeout(()=>el.className='alert-bar',8000);}
+async function post(path,body){const r=await fetch(BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
+async function connect(){
+  BASE=document.getElementById('inp-url').value.trim().replace(/\/$/,'');
+  GKEY=document.getElementById('inp-key').value.trim();
+  if(!GKEY){showAlert('Informe a apiKey global.');return;}
+  document.getElementById('splash-msg').textContent='Conectando...';
+  document.getElementById('splash').classList.remove('hide');
+  setStatus('loading','Conectando...');
+  try{
+    await post('/int/getAllQueues',{apiKey:GKEY});
+    localStorage.setItem(SK,GKEY);localStorage.setItem(SU,BASE);
+    connected=true;
+    document.getElementById('main-content').style.display='block';
+    document.getElementById('config-panel').style.display='none';
+    document.getElementById('filter-bar').style.display='flex';
+    await fetchAll();startTimer();
+  }catch(e){document.getElementById('splash').classList.add('hide');setStatus('error','Erro ao conectar');showAlert('Erro: '+e.message);}
+}
+function logout(){connected=false;localStorage.removeItem(SK);localStorage.removeItem(SU);if(timer)clearInterval(timer);document.getElementById('main-content').style.display='none';document.getElementById('config-panel').style.display='flex';document.getElementById('filter-bar').style.display='none';document.getElementById('inp-key').value='';setStatus('','Desconectado');}
+function startTimer(){if(timer)clearInterval(timer);timer=setInterval(fetchAll,intervalSecs*1000);}
+function changeInterval(){intervalSecs=parseInt(document.getElementById('interval-sel').value);if(connected)startTimer();}
+async function fetchAll(){
+  if(!connected)return;
+  setStatus('loading','Atualizando...');
+  try{
+    allQueues=await post('/int/getAllQueues',{apiKey:GKEY});
+    const active=allQueues.filter(q=>q.enabled&&q.connected&&q.openChats>0);
+    allChats=[];
+    await Promise.all(active.map(async q=>{try{const r=await post('/int/getAllOpenChats',{queueId:q.id,apiKey:GKEY});(r.chats||[]).forEach(c=>{c._qId=q.id;c._qN=q.name;allChats.push(c);});}catch(e){}}));
+    const userIds=[...new Set(allChats.filter(c=>c.userId).map(c=>c.userId))];
+    await Promise.all(userIds.filter(uid=>!agentMap[uid]).map(async uid=>{
+      try{const chat=allChats.find(c=>c.userId===uid);if(!chat)return;const u=await post('/int/getUserDetail',{queueId:chat._qId,apiKey:GKEY,userId:uid});agentMap[uid]={id:uid,name:u.fullName||u.username||'Agente '+uid,chatsToday:u.chatsToday,chatsRespondedToday:u.chatsRespondedToday,nps:u.todaysSurveyGrade,surveys:u.todaysRespondedSurveys,tma:u.todaysAvgContactTime,paused:u.paused,available:u.available,chatsCount:u.chatsCount};}catch(e){agentMap[uid]={id:uid,name:'Agente '+uid};}
+    }));
+    populateFilterSelects();applyFilters();
+    document.getElementById('last-update').textContent='Atualizado às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    setStatus('ok','Ao vivo');document.getElementById('splash').classList.add('hide');
+  }catch(e){setStatus('error','Erro');showAlert('Erro: '+e.message);}
+}
+function populateFilterSelects(){
+  const qSel=document.getElementById('filter-queue'),aSel=document.getElementById('filter-agent');
+  const prevQ=qSel.value,prevA=aSel.value;
+  qSel.innerHTML='<option value="">Todas as filas</option>'+allQueues.filter(q=>q.enabled&&q.connected).map(q=>'<option value="'+q.id+'">'+esc(q.name)+'</option>').join('');
+  if(prevQ)qSel.value=prevQ;
+  aSel.innerHTML='<option value="">Todos os agentes</option>'+Object.keys(agentMap).map(id=>'<option value="'+id+'">'+esc(agentMap[id].name)+'</option>').join('');
+  if(prevA)aSel.value=prevA;
+}
+function applyFilters(){
+  filterQueue=document.getElementById('filter-queue').value;
+  filterAgent=document.getElementById('filter-agent').value;
+  filterClient=document.getElementById('filter-client').value.toLowerCase().trim();
+  let filtered=allChats.filter(c=>{
+    if(filterQueue&&String(c._qId)!==filterQueue)return false;
+    if(filterAgent&&String(c.userId)!==filterAgent)return false;
+    if(filterClient){const n=(c.clientName||'').toLowerCase(),num=(c.clientNumber||'').toLowerCase(),p=(c.protocol||'').toLowerCase();if(!n.includes(filterClient)&&!num.includes(filterClient)&&!p.includes(filterClient))return false;}
+    return true;
+  });
+  renderFilterChips();renderMetrics(filtered);renderAgentsSection(filtered);renderQueuesSection(filtered);renderUnans(filtered);renderAll(filtered);
+}
+function clearFilters(){document.getElementById('filter-queue').value='';document.getElementById('filter-agent').value='';document.getElementById('filter-client').value='';applyFilters();}
+function renderFilterChips(){
+  const chips=[];
+  if(filterQueue){const q=allQueues.find(q=>String(q.id)===filterQueue);chips.push('<span class="filter-chip">Fila: '+esc(q?q.name:filterQueue)+'<button onclick="document.getElementById(\'filter-queue\').value=\'\';applyFilters()">✕</button></span>');}
+  if(filterAgent){const a=agentMap[filterAgent];chips.push('<span class="filter-chip">Agente: '+esc(a?a.name:'ID '+filterAgent)+'<button onclick="document.getElementById(\'filter-agent\').value=\'\';applyFilters()">✕</button></span>');}
+  if(filterClient){chips.push('<span class="filter-chip">Busca: "'+esc(filterClient)+'"<button onclick="document.getElementById(\'filter-client\').value=\'\';applyFilters()">✕</button></span>');}
+  document.getElementById('filter-chips').innerHTML=chips.join('');
+}
+function renderMetrics(filtered){
+  const onQueue=filtered.filter(c=>c.onQueue).length;
+  const unans=filtered.filter(c=>c.onQueue||!c.responded||!c.userResponded).length;
+  let queuesToCalc=filterQueue?allQueues.filter(q=>String(q.id)===filterQueue):allQueues;
+  let tR=0,tA=0,tmaS=0,tmaC=0,tmprS=0,tmprC=0,npsS=0,npsT=0;
+  queuesToCalc.forEach(q=>{tR+=q.todaysRespondedChats||0;tA+=q.loggedAgentsCount||0;if(q.todaysAvgContactTime>0){tmaS+=q.todaysAvgContactTime;tmaC++;}if(q.todaysAvgFirstAnswerTime>0){tmprS+=q.todaysAvgFirstAnswerTime;tmprC++;}if(q.todaysRespondedSurveys>0){npsS+=q.todaysSurveyGrade*q.todaysRespondedSurveys;npsT+=q.todaysRespondedSurveys;}});
+  if(filterAgent&&agentMap[filterAgent]){const a=agentMap[filterAgent];tR=a.chatsRespondedToday||0;tA=1;if(a.tma>0){tmaS=a.tma;tmaC=1;}if(a.surveys>0){npsS=(a.nps||0)*a.surveys;npsT=a.surveys;}}
+  const npsAvg=npsT>0?(npsS/npsT).toFixed(1):null;
+  document.getElementById('m-open').textContent=filtered.length;
+  document.getElementById('m-queue-sub').textContent=onQueue+' na fila';
+  document.getElementById('m-unans').textContent=unans;
+  document.getElementById('m-resp').textContent=tR;
+  document.getElementById('m-agents').textContent=tA;
+  document.getElementById('m-tma').textContent=tmaC>0?fmtSec(Math.round(tmaS/tmaC)):'—';
+  document.getElementById('m-tmpr').textContent=tmprC>0?fmtSec(Math.round(tmprS/tmprC)):'—';
+  const npsEl=document.getElementById('m-nps');npsEl.textContent=npsAvg!==null?npsAvg:'—';npsEl.className='metric-value '+(npsAvg!==null?npsClass(parseFloat(npsAvg)):'');
+  document.getElementById('m-nps-sub').textContent=npsT+' pesquisas';
+}
+function renderAgentsSection(filtered){
+  const sec=document.getElementById('agents-section');
+  if(!filterQueue&&!filterAgent){sec.style.display='none';return;}
+  sec.style.display='block';
+  const agentIds=[...new Set(filtered.filter(c=>c.userId).map(c=>c.userId))];
+  const el=document.getElementById('agents-grid');
+  if(!agentIds.length){el.innerHTML='<p style="color:#888;font-size:13px">Nenhum agente com atendimentos nessa seleção.</p>';return;}
+  el.innerHTML=agentIds.map(uid=>{
+    const a=agentMap[uid]||{id:uid,name:'Agente '+uid};
+    const chatsAtivos=filtered.filter(c=>c.userId===uid).length;
+    const ini=initials(a.name);
+    const stColor=a.paused?'#BA7517':a.available?'#0F6E56':'#E24B4A';
+    const stLabel=a.paused?'Em pausa':a.available?'Disponível':'Indisponível';
+    return'<div class="agent-card"><div class="agent-header"><div class="agent-avatar">'+esc(ini)+'</div><div><div class="agent-name" title="'+esc(a.name)+'">'+esc(a.name)+'</div><div style="font-size:11px;font-weight:600;color:'+stColor+'">'+stLabel+'</div></div></div><div class="agent-stats"><div><div class="as-label">Em atend.</div><div class="as-val '+(chatsAtivos>8?'red':chatsAtivos>5?'amber':'')+'">'+chatsAtivos+'</div></div><div><div class="as-label">Hoje total</div><div class="as-val">'+(a.chatsToday||'—')+'</div></div><div><div class="as-label">Respondidos</div><div class="as-val">'+(a.chatsRespondedToday||'—')+'</div></div><div><div class="as-label">TMA</div><div class="as-val" style="font-size:12px">'+fmtSec(a.tma)+'</div></div><div><div class="as-label">NPS</div><div class="as-val '+(a.surveys>0?npsClass(a.nps):'')+'">'+( a.surveys>0?(a.nps||0).toFixed(1):'—')+'</div></div><div><div class="as-label">Pesquisas</div><div class="as-val">'+(a.surveys||0)+'</div></div></div></div>';
+  }).join('');
+  document.getElementById('lbl-agents').textContent='Agentes ('+(filterAgent?1:agentIds.length)+')';
+}
+function renderQueuesSection(filtered){
+  const sec=document.getElementById('queues-section');
+  if(filterQueue||filterAgent){sec.style.display='none';return;}
+  sec.style.display='block';
+  const el=document.getElementById('queues-grid');
+  const list=allQueues.filter(q=>q.enabled);
+  if(!list.length){el.innerHTML='<p style="color:#888;font-size:13px">Nenhuma fila ativa.</p>';return;}
+  el.innerHTML=list.map(q=>{
+    const conn=q.connected&&q.authenticated;
+    const nps=q.todaysRespondedSurveys>0?parseFloat(q.todaysSurveyGrade).toFixed(1):'—';
+    const npsC=q.todaysRespondedSurveys>0?npsClass(parseFloat(q.todaysSurveyGrade)):'';
+    return'<div class="queue-card" onclick="document.getElementById(\'filter-queue\').value=\''+q.id+'\';applyFilters()" title="Clique para filtrar"><div class="queue-name" title="'+esc(q.name)+'">'+esc(q.name)+'</div><div class="queue-stats"><div><div class="qs-label">Abertos</div><div class="qs-val '+(q.openChats>10?'red':q.openChats>5?'amber':'')+'">'+( q.openChats||0)+'</div></div><div><div class="qs-label">Na fila</div><div class="qs-val '+(q.chatsOnQueue>3?'red':q.chatsOnQueue>0?'amber':'')+'">'+( q.chatsOnQueue||0)+'</div></div><div><div class="qs-label">Agentes</div><div class="qs-val">'+(q.loggedAgentsCount||0)+'</div></div><div><div class="qs-label">NPS</div><div class="qs-val '+npsC+'">'+nps+'</div></div><div><div class="qs-label">TMA</div><div class="qs-val" style="font-size:12px">'+fmtSec(q.todaysAvgContactTime)+'</div></div><div><div class="qs-label">Status</div><span class="conn-badge '+(conn?'conn-ok':'conn-off')+'">'+(conn?'Online':'Offline')+'</span></div></div></div>';
+  }).join('');
+}
+function renderUnans(filtered){
+  const unans=filtered.filter(c=>c.onQueue||!c.responded||!c.userResponded);
+  unans.sort((a,b)=>elapsed(b.lastRcvMsgTime||b.beginTime)-elapsed(a.lastRcvMsgTime||a.beginTime));
+  document.getElementById('lbl-unans').innerHTML='Sem resposta do agente <span class="count-badge red">'+unans.length+'</span>';
+  const el=document.getElementById('unans-body');
+  if(!unans.length){el.innerHTML='<tr class="empty-row"><td colspan="7">Nenhum atendimento aguardando resposta</td></tr>';return;}
+  el.innerHTML=unans.slice(0,50).map(c=>{
+    const wTs=c.lastRcvMsgTime||c.beginTime,wS=elapsed(wTs);
+    const name=esc(c.clientName||c.clientNumber||c.clientId||'—');
+    const agente=c.onQueue?'<span class="badge badge-amber">Na fila</span>':(c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'—');
+    return'<tr><td title="'+name+'">'+name+'</td><td><span class="queue-tag">'+esc(c._qN||'—')+'</span></td><td class="'+waitCls(wS)+'">'+fmtEl(wTs)+'</td><td>'+agente+'</td><td>'+urgBadge(wS)+'</td><td>'+fmtEl(c.beginTime)+'</td><td style="font-size:11px;color:#888">'+esc(c.protocol||'—')+'</td></tr>';
+  }).join('');
+}
+function renderAll(filtered){
+  const sorted=[...filtered].sort((a,b)=>elapsed(b.beginTime)-elapsed(a.beginTime));
+  document.getElementById('lbl-all').innerHTML='Todos os atendimentos <span class="count-badge">'+sorted.length+'</span>';
+  const el=document.getElementById('all-body');
+  if(!sorted.length){el.innerHTML='<tr class="empty-row"><td colspan="8">Nenhum atendimento encontrado</td></tr>';return;}
+  el.innerHTML=sorted.slice(0,100).map(c=>{
+    const name=esc(c.clientName||c.clientNumber||c.clientId||'—');
+    const agenteName=c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'—';
+    const st=c.onQueue?'<span class="badge badge-amber">Na fila</span>':c.userId?'<span class="badge badge-green">Com agente</span>':'<span class="badge badge-gray">—</span>';
+    return'<tr><td title="'+name+'">'+name+'</td><td><span class="queue-tag">'+esc(c._qN||'—')+'</span></td><td>'+fmtEl(c.beginTime)+'</td><td>'+(c.lastRcvMsgTime?fmtEl(c.lastRcvMsgTime)+' atrás':'—')+'</td><td>'+(c.lastSendMsgTime?fmtEl(c.lastSendMsgTime)+' atrás':'—')+'</td><td style="font-size:12px">'+agenteName+'</td><td>'+st+'</td><td style="font-size:11px;color:#888">'+esc(c.protocol||'—')+'</td></tr>';
+  }).join('');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  const k=localStorage.getItem(SK),u=localStorage.getItem(SU);
+  if(k&&u){document.getElementById('inp-key').value=k;document.getElementById('inp-url').value=u;document.getElementById('splash-msg').textContent='Conectando automaticamente...';connect();}
+  else{document.getElementById('splash').classList.add('hide');}
+});
+document.getElementById('inp-key').addEventListener('keydown',e=>{if(e.key==='Enter')connect();});
+</script>
+</body>
+</html>
