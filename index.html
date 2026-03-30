@@ -277,7 +277,40 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
       <span class="status-txt" id="status-txt">â</span>
     </div>
     <button class="btn btn-accent" onclick="fetchAll()">âº Sync</button>
-    <button class="btn" onclick="resetSetup()" title="ConfiguraÃ§Ãµes">â</button>
+    <button class="btn" onclick="resetSetup()" title="ConfiguraÃ§Ãµes">&#x2699;</button>
+    <button class="btn" onclick="toggleDebug()" id="btn-debug">&#x1F50D; debug</button>
+  </div>
+</div>
+
+<!-- PAINEL DEBUG -->
+<div id="debug-panel" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.88);overflow:auto;padding:2rem;">
+  <div style="max-width:1400px;margin:0 auto;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:1.5rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+      <div style="font-family:var(--mono);font-size:13px;color:var(--text)">&#x1F50D; Diagn&#xF3;stico &#x2014; dados brutos da API</div>
+      <button onclick="toggleDebug()" style="background:var(--bg4);border:1px solid var(--border2);color:var(--text2);padding:4px 14px;border-radius:6px;cursor:pointer;font-size:12px;">&#x2715; Fechar</button>
+    </div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;">Resumo de campos</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:1.5rem;" id="dbg-summary"></div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;">Amostra &#x2014; primeiros 30 chats</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;">
+        <thead>
+          <tr style="background:var(--bg3);">
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">cliente</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">fila</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">userId</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">onQueue</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">responded</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">userResponded</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">lastRcvMsgTime</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">lastSendMsgTime</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">rcv&gt;send?</th>
+            <th style="padding:6px 10px;text-align:left;color:var(--text3);white-space:nowrap;">isPending()</th>
+          </tr>
+        </thead>
+        <tbody id="dbg-body"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -791,6 +824,73 @@ function renderAll(f){
     const nm=esc(c.clientName||c.clientNumber||c.clientId||'â');
     const ag=c.userId?(agentMap[c.userId]?esc(agentMap[c.userId].name):'ID '+c.userId):'â';
     return'<tr><td class="mono" title="'+nm+'">'+nm+'</td><td><span class="queue-tag">'+esc(c._qN||'â')+'</span></td><td class="mono">'+fEl(c.beginTime)+'</td><td class="mono">'+(c.lastRcvMsgTime?fEl(c.lastRcvMsgTime):'â')+'</td><td class="mono">'+(c.lastSendMsgTime?fEl(c.lastSendMsgTime):'â')+'</td><td class="mono" style="color:var(--text2)">'+ag+'</td><td>'+getSituation(c)+'</td><td class="mono" style="color:var(--text3)">'+esc(c.protocol||'â')+'</td></tr>';
+  }).join('');
+}
+
+
+function toggleDebug(){
+  const p=document.getElementById('debug-panel');
+  const visible=p.style.display==='block';
+  p.style.display=visible?'none':'block';
+  if(!visible)renderDebug();
+}
+
+function renderDebug(){
+  const now=Math.floor(Date.now()/1000);
+  const total=allChats.length;
+
+  // Contagens de campos
+  const withSend=allChats.filter(c=>c.lastSendMsgTime&&c.lastSendMsgTime>0).length;
+  const withRcv=allChats.filter(c=>c.lastRcvMsgTime&&c.lastRcvMsgTime>0).length;
+  const onQueueN=allChats.filter(c=>c.onQueue).length;
+  const respondedN=allChats.filter(c=>c.responded).length;
+  const userRespondedN=allChats.filter(c=>c.userResponded).length;
+  const withUserId=allChats.filter(c=>c.userId&&c.userId!==0).length;
+  const rcvGtSend=allChats.filter(c=>c.lastRcvMsgTime&&c.lastSendMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime).length;
+  const sendGtRcv=allChats.filter(c=>c.lastSendMsgTime&&(!c.lastRcvMsgTime||c.lastSendMsgTime>=c.lastRcvMsgTime)).length;
+  const pendingN=allChats.filter(isPending).length;
+
+  function dbgCard(label,val,color){
+    return '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;">'
+      +'<div style="font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:.3rem;">'+label+'</div>'
+      +'<div style="font-family:var(--mono);font-size:20px;font-weight:500;color:'+(color||'var(--text)')+'">'+val+'</div>'
+      +'<div style="font-family:var(--mono);font-size:10px;color:var(--text3);">de '+total+' total ('+(total>0?Math.round(val/total*100):0)+'%)</div>'
+      +'</div>';
+  }
+
+  document.getElementById('dbg-summary').innerHTML=
+    dbgCard('Total chats',total,'var(--accent)')+
+    dbgCard('isPending()',pendingN,'var(--red)')+
+    dbgCard('onQueue=true',onQueueN,'var(--blue)')+
+    dbgCard('tem lastSendMsgTime',withSend,'var(--green)')+
+    dbgCard('tem lastRcvMsgTime',withRcv)+
+    dbgCard('rcvMsg > sendMsg',rcvGtSend,'var(--amber)')+
+    dbgCard('sendMsg >= rcvMsg',sendGtRcv,'var(--green)')+
+    dbgCard('responded=true',respondedN)+
+    dbgCard('userResponded=true',userRespondedN)+
+    dbgCard('tem userId',withUserId);
+
+  // Tabela amostral
+  const sample=allChats.slice(0,30);
+  const tbody=document.getElementById('dbg-body');
+  tbody.innerHTML=sample.map(c=>{
+    const rcvGtS=c.lastRcvMsgTime&&c.lastSendMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime;
+    const pend=isPending(c);
+    const bg=pend?'background:rgba(239,68,68,.07)':'';
+    const v=(x)=>x===undefined?'<span style="color:var(--text3)">undef</span>':x===null?'<span style="color:var(--text3)">null</span>':x===0?'<span style="color:var(--text3)">0</span>':x===false?'<span style="color:var(--red)">false</span>':x===true?'<span style="color:var(--green)">true</span>':String(x);
+    const ts=(t)=>(!t||t===0)?'<span style="color:var(--text3)">\u2014</span>':'<span title="Unix: '+t+'">'+Math.round((now-t)/60)+'m atrs</span>';
+    return '<tr style="border-bottom:1px solid var(--border);'+bg+'">'
+      +'<td style="padding:5px 10px;color:var(--text2);">'+(c.clientName||c.clientNumber||c.clientId||'?').toString().slice(0,18)+'</td>'
+      +'<td style="padding:5px 10px;color:var(--text3);">'+(c._qN||'?').toString().slice(0,14)+'</td>'
+      +'<td style="padding:5px 10px;">'+v(c.userId)+'</td>'
+      +'<td style="padding:5px 10px;">'+v(c.onQueue)+'</td>'
+      +'<td style="padding:5px 10px;">'+v(c.responded)+'</td>'
+      +'<td style="padding:5px 10px;">'+v(c.userResponded)+'</td>'
+      +'<td style="padding:5px 10px;">'+ts(c.lastRcvMsgTime)+'</td>'
+      +'<td style="padding:5px 10px;">'+ts(c.lastSendMsgTime)+'</td>'
+      +'<td style="padding:5px 10px;">'+(rcvGtS?'<span style="color:var(--red)">sim</span>':'<span style="color:var(--green)">não</span>')+'</td>'
+      +'<td style="padding:5px 10px;">'+(pend?'<span style="color:var(--red);font-weight:600">SIM</span>':'<span style="color:var(--green)">não</span>')+'</td>'
+      +'</tr>';
   }).join('');
 }
 
