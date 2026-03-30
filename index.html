@@ -487,16 +487,13 @@ function el(ts){return(!ts||ts===0)?0:Math.floor(Date.now()/1000)-ts;}
 function fEl(ts){const s=el(ts);return s>0?fmt(s):'â';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function isPending(c){
-  // 1. Sem agente — na fila esperando atribuição
+  // Na fila sem agente atribuido
   if(c.onQueue)return true;
-  // 2. Agente nunca enviou nada (sem lastSendMsgTime)
-  if(!c.lastSendMsgTime)return true;
-  // 3. Cliente mandou mensagem depois da última resposta do agente
-  if(c.lastRcvMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime)return true;
-  // 4. Agente foi o último a falar (lastSendMsgTime >= lastRcvMsgTime) → NÃO pendente
+  // Agente ainda nao respondeu (userResponded e o campo real da API)
+  if(!c.userResponded)return true;
   return false;
 }
-function getSituation(c){if(c.onQueue)return'<span class="badge badge-blue">↗ na fila</span>';if(!c.lastSendMsgTime)return'<span class="badge badge-pending">⏳ aguard. 1ª resp.</span>';if(c.lastRcvMsgTime&&c.lastRcvMsgTime>c.lastSendMsgTime)return'<span class="badge badge-pending">⏳ cliente respondeu</span>';return'<span class="badge badge-green">✓ agente respondeu</span>';}
+function getSituation(c){if(c.onQueue)return'<span class="badge badge-blue">↗ na fila</span>';if(!c.userResponded)return'<span class="badge badge-pending">⏳ aguard. resposta</span>';return'<span class="badge badge-green">✓ agente respondeu</span>';}
 function urgB(s){if(s>3600)return'<span class="badge badge-red">â crÃ­tico</span>';if(s>1800)return'<span class="badge badge-amber">â urgente</span>';if(s>600)return'<span class="badge badge-amber">â atenÃ§Ã£o</span>';return'<span class="badge badge-green">â normal</span>';}
 function wCls(s){return s>3600?'wait-critical':s>1800?'wait-urgent':'';}
 function nCls(n){return n>=8?'green':n>=6?'amber':'red';}
@@ -586,8 +583,10 @@ function renderChips(){
 }
 
 function renderKPIs(f){
+  // Pendente = onQueue OU agente nao respondeu ainda
   const pending=f.filter(isPending);
-  const answered=f.filter(c=>!isPending(c));
+  // Agente respondeu = tem agente + userResponded true
+  const answered=f.filter(c=>!c.onQueue&&c.userResponded);
   const onQ=f.filter(c=>c.onQueue).length;
   let qCalc=fQ?allQueues.filter(q=>String(q.id)===fQ):allQueues;
   let tR=0,tA=0,tmaS=0,tmaC=0,tmS=0,tmC=0,nS=0,nT=0;
