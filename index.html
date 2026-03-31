@@ -335,7 +335,7 @@ tbody tr.row-critical{animation:rowblink 2s infinite;}
     <div class="kpi kpi-accent"><div class="kpi-label">Abertos agora</div><div class="kpi-value" id="m-open">—</div><div class="kpi-sub" id="m-queue-sub">—</div></div>
     <div class="kpi kpi-red"><div class="kpi-label">Aguard. resposta</div><div class="kpi-value red" id="m-unans">—</div><div class="kpi-sub">cliente pendente</div></div>
     <div class="kpi kpi-green"><div class="kpi-label">Agente respondeu</div><div class="kpi-value green" id="m-answered">—</div><div class="kpi-sub">aguardando cliente</div></div>
-    <div class="kpi kpi-accent"><div class="kpi-label">Respondidos hoje</div><div class="kpi-value" id="m-resp">—</div><div class="kpi-sub">encerrados</div></div>
+    <div class="kpi kpi-accent" id="kpi-resp-card" style="cursor:default;position:relative;" title=""><div class="kpi-label">Respondidos hoje</div><div class="kpi-value" id="m-resp">—</div><div class="kpi-sub" id="m-resp-sub">por agentes humanos</div><div id="kpi-resp-tooltip" style="display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a1a1f;border:1px solid rgba(99,102,241,.3);border-radius:8px;padding:8px 12px;font-size:11px;font-family:var(--mono);white-space:nowrap;z-index:99;box-shadow:0 4px 16px rgba(0,0,0,.5);color:var(--text2);pointer-events:none;"></div></div>
     <div class="kpi kpi-green"><div class="kpi-label">Agentes online</div><div class="kpi-value" id="m-agents">—</div><div class="kpi-sub">logados agora</div></div>
     <div class="kpi"><div class="kpi-label">TMA</div><div class="kpi-value sm" id="m-tma">—</div><div class="kpi-sub">tempo médio atend.</div></div>
     <div class="kpi"><div class="kpi-label">TMPR</div><div class="kpi-value sm" id="m-tmpr">—</div><div class="kpi-sub">tempo 1Âª resposta</div></div>
@@ -593,17 +593,27 @@ function renderKPIs(f){
   const answered=f.filter(c=>!isPending(c));
   const onQ=f.filter(c=>!c.userId||c.userId===0).length;
   let qCalc=fQ?allQueues.filter(q=>String(q.id)===fQ):allQueues;
-  let tR=0,tmaS=0,tmaC=0,tmS=0,tmC=0,nS=0,nT=0;
-  qCalc.forEach(q=>{tR+=q.todaysRespondedChats||0;if(q.todaysAvgContactTime>0&&q.todaysAvgContactTime<86400){tmaS+=q.todaysAvgContactTime;tmaC++;}if(q.todaysAvgAnswerTime>0&&q.todaysAvgAnswerTime<86400){tmS+=q.todaysAvgAnswerTime;tmC++;}if(q.todaysRespondedSurveys>0){nS+=q.todaysSurveyGrade*q.todaysRespondedSurveys;nT+=q.todaysRespondedSurveys;}});
+  let tRqueue=0,tmaS=0,tmaC=0,tmS=0,tmC=0,nS=0,nT=0;
+  qCalc.forEach(q=>{tRqueue+=q.todaysRespondedChats||0;if(q.todaysAvgContactTime>0&&q.todaysAvgContactTime<86400){tmaS+=q.todaysAvgContactTime;tmaC++;}if(q.todaysAvgAnswerTime>0&&q.todaysAvgAnswerTime<86400){tmS+=q.todaysAvgAnswerTime;tmC++;}if(q.todaysRespondedSurveys>0){nS+=q.todaysSurveyGrade*q.todaysRespondedSurveys;nT+=q.todaysRespondedSurveys;}});
+  // Respondidos por agentes humanos (soma individual do agentMap — exclui bots)
+  let tR=Object.values(agentMap).reduce((s,a)=>s+(a.respToday||0),0);
   // Agentes unicos logados = entradas no agentMap (cada userId e unico)
   const tA=fA?1:Object.keys(agentMap).length;
-  if(fA&&agentMap[fA]){const a=agentMap[fA];tR=a.respToday||0;tA=1;if(a.tma>0&&a.tma<86400){tmaS=a.tma;tmaC=1;}if(a.surveys>0){nS=(a.nps||0)*a.surveys;nT=a.surveys;}}
+  if(fA&&agentMap[fA]){const a=agentMap[fA];tR=a.respToday||0;if(a.tma>0&&a.tma<86400){tmaS=a.tma;tmaC=1;}if(a.surveys>0){nS=(a.nps||0)*a.surveys;nT=a.surveys;}}
   const np=nT>0?(nS/nT).toFixed(1):null;
   document.getElementById('m-open').textContent=f.length;
   document.getElementById('m-queue-sub').textContent=onQ+' na fila';
   document.getElementById('m-unans').textContent=pending.length;
   document.getElementById('m-answered').textContent=answered.length;
+  // KPI respondidos: valor humano + tooltip com valor bruto das filas
   document.getElementById('m-resp').textContent=tR;
+  const tDiff=tRqueue-tR;
+  const ttEl=document.getElementById('kpi-resp-tooltip');
+  if(ttEl){ttEl.innerHTML='<span style="color:var(--text3)">Filas (inclui bots):</span> <span style="color:var(--amber)">'+tRqueue+'</span><br><span style="color:var(--text3)">Estimativa bots:</span> <span style="color:var(--red-dim);color:#f87171">'+Math.max(0,tDiff)+'</span>';}
+  const kpiCard=document.getElementById('kpi-resp-card');
+  if(kpiCard){kpiCard.onmouseenter=()=>{if(ttEl)ttEl.style.display='block';};kpiCard.onmouseleave=()=>{if(ttEl)ttEl.style.display='none';};}
+  const subEl=document.getElementById('m-resp-sub');
+  if(subEl){subEl.textContent=tRqueue>tR?'por agentes ('+tRqueue+' c/ bots)':'por agentes humanos';}
   document.getElementById('m-agents').textContent=tA;
   document.getElementById('m-tma').textContent=tmaC>0?fmt(Math.round(tmaS/tmaC)):'—';
   document.getElementById('m-tmpr').textContent=tmC>0?fmt(Math.round(tmS/tmC)):'—';
